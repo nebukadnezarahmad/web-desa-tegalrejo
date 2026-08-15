@@ -7,7 +7,7 @@ sampah, dan kanal lapor warga.
 Ini purwarupa untuk lomba web design. Data desanya sebagian nyata (lihat
 catatan di bawah), sisanya karangan.
 
-Situs langsung: https://web-desa-lomba.vercel.app
+Situs langsung: https://web-desa-tegalrejo.vercel.app
 
 ## Menjalankan
 
