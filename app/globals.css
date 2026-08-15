@@ -1,0 +1,305 @@
+@import "tailwindcss";
+
+/* ============================================================
+   BALAI: Design System "Civic Bright"
+   Kanvas putih dominan. Hijau = tindakan & pertumbuhan.
+   Biru = informasi & layanan. Tidak dicampur sembarangan.
+   ============================================================ */
+
+:root {
+  /* Permukaan */
+  --surface: #ffffff;
+  --surface-soft: #f6faf7;
+  --surface-tint: #f1f8fe;
+
+  /* Hijau daun: tindakan, pertumbuhan, lingkungan, kesehatan */
+  --green: #16a34a;
+  --green-strong: #15803d;
+  --green-deep: #14532d;
+  --green-soft: #dcfce7;
+
+  /* Biru cerah: informasi, pengumuman, layanan administrasi */
+  --blue: #0ea5e9;
+  --blue-strong: #0369a1;
+  --blue-deep: #0c4a6e;
+  --blue-soft: #e0f2fe;
+
+  /* Teks & garis. Tiga tingkat, semuanya lolos WCAG AA (>= 4.5:1 di atas putih) */
+  --ink: #111827; /* 17.7:1 */
+  --ink-muted: #4b5563; /* 7.6:1 */
+  --ink-faint: #6b7280; /* 4.8:1 */
+  --line: #e7ebe8;
+  --line-strong: #d3dad5;
+
+  --danger: #b91c1c;
+  --danger-soft: #fee2e2;
+  --warn: #b45309;
+  --warn-soft: #fef3c7;
+
+  --radius: 0.75rem;
+
+  /* Gerak dibatasi dua tingkat saja, jangan lebih.
+     Cepat untuk mikro-interaksi yang harus terasa langsung di jari;
+     tenang untuk elemen yang masuk layar. */
+  --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+  --gerak-cepat: 180ms;
+  --gerak-tenang: 520ms;
+
+  /* Ritme vertikal: tiga tingkat, dipakai bergantian supaya halaman
+     tidak terbaca seperti daftar kotak berjarak sama. */
+  --ritme-rapat: clamp(2.5rem, 1.75rem + 2.5vw, 3.75rem);
+  --ritme-normal: clamp(3rem, 2.25rem + 3.5vw, 5.5rem);
+  --ritme-lega: clamp(3.5rem, 2.5rem + 4.5vw, 6.5rem);
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-surface-tint: var(--surface-tint);
+
+  --color-green: var(--green);
+  --color-green-strong: var(--green-strong);
+  --color-green-deep: var(--green-deep);
+  --color-green-soft: var(--green-soft);
+
+  --color-blue: var(--blue);
+  --color-blue-strong: var(--blue-strong);
+  --color-blue-deep: var(--blue-deep);
+  --color-blue-soft: var(--blue-soft);
+
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-jakarta), ui-sans-serif, sans-serif;
+
+  /* Radius bertingkat. Kartu kecil lebih tajam, panel besar lebih lunak.
+     Radius seragam di segala ukuran membuat semuanya terlihat sederajat. */
+  --radius-chip: 0.625rem;
+  --radius-card: 0.875rem;
+  --radius-panel: 1.25rem;
+}
+
+/* ---------- Base ---------- */
+
+* {
+  border-color: var(--line);
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Judul besar memakai huruf display; judul kecil tetap Jakarta supaya
+   tidak berebut perhatian dengan isi. Pembagiannya di kelas, bukan di
+   elemen. H3 di dalam kartu tidak sepatutnya sekeras h1 di hero. */
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.02em;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.judul-display {
+  font-family: var(--font-bricolage), var(--font-jakarta), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+/* Eyebrow / kicker: huruf kecil berjarak lebar. Menandai jenis isi,
+   bukan hiasan: tiap seksi punya satu, dan warnanya mengikuti peran
+   hijau/biru yang sudah ditetapkan. */
+.kicker {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .kicker {
+    font-size: 0.75rem;
+  }
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Fokus keyboard selalu terlihat (syarat aksesibilitas) */
+:focus-visible {
+  outline: 2px solid var(--green-strong);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--green-soft);
+  color: var(--green-deep);
+}
+
+/* ---------- Signature: garis kontur peta ---------- */
+
+.kontur {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='560' height='560' viewBox='0 0 560 560'%3E%3Cg fill='none' stroke='%2316a34a' stroke-width='1.1' opacity='0.16'%3E%3Cpath d='M-40 300c60-70 130-96 210-78 80 18 128 76 212 66 84-10 122-64 218-40'/%3E%3Cpath d='M-40 262c66-74 138-100 222-80 84 20 130 74 210 64 80-10 118-58 208-36'/%3E%3Cpath d='M-40 224c72-78 146-104 234-82 88 22 132 72 208 62 76-10 114-52 198-32'/%3E%3Cpath d='M-40 186c78-82 154-108 246-84 92 24 134 70 206 60 72-10 110-46 188-28'/%3E%3Cpath d='M-40 148c84-86 162-112 258-86 96 26 136 68 204 58 68-10 106-40 178-24'/%3E%3Cpath d='M-40 338c54-66 122-92 198-76 76 16 126 78 214 68 88-10 126-70 228-44'/%3E%3Cpath d='M-40 376c48-62 114-88 186-74 72 14 124 80 216 70 92-10 130-76 238-48'/%3E%3Cpath d='M-40 414c42-58 106-84 174-72 68 12 122 82 218 72 96-10 134-82 248-52'/%3E%3Cpath d='M-40 452c36-54 98-80 162-70 64 10 120 84 220 74 100-10 138-88 258-56'/%3E%3Cpath d='M-40 490c30-50 90-76 150-68 60 8 118 86 222 76 104-10 142-94 268-60'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 560px 560px;
+}
+
+.kontur-biru {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='560' height='560' viewBox='0 0 560 560'%3E%3Cg fill='none' stroke='%230ea5e9' stroke-width='1.1' opacity='0.16'%3E%3Cpath d='M-40 300c60-70 130-96 210-78 80 18 128 76 212 66 84-10 122-64 218-40'/%3E%3Cpath d='M-40 262c66-74 138-100 222-80 84 20 130 74 210 64 80-10 118-58 208-36'/%3E%3Cpath d='M-40 224c72-78 146-104 234-82 88 22 132 72 208 62 76-10 114-52 198-32'/%3E%3Cpath d='M-40 338c54-66 122-92 198-76 76 16 126 78 214 68 88-10 126-70 228-44'/%3E%3Cpath d='M-40 376c48-62 114-88 186-74 72 14 124 80 216 70 92-10 130-76 238-48'/%3E%3Cpath d='M-40 414c42-58 106-84 174-72 68 12 122 82 218 72 96-10 134-82 248-52'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 560px 560px;
+}
+
+/* ---------- Pita elevasi: tanda tangan situs ini ----------
+   Desa Tegalrejo duduk di 1.300 mdpl di lereng Sindoro. Dari 891 hektar,
+   hanya 20 berupa sawah; sisanya tegalan yang mengikuti kontur lereng.
+   Garis kontur di sini bukan ornamen, melainkan bentuk tanahnya sendiri.
+   Pita bertingkat ini membaca sebagai penampang lereng, dari kaki
+   (hijau pekat) ke puncak (hampir putih). */
+
+.pita-elevasi {
+  background-image:
+    linear-gradient(
+      to top,
+      color-mix(in srgb, var(--green) 13%, transparent) 0%,
+      color-mix(in srgb, var(--green) 13%, transparent) 22%,
+      color-mix(in srgb, var(--green) 9%, transparent) 22%,
+      color-mix(in srgb, var(--green) 9%, transparent) 44%,
+      color-mix(in srgb, var(--green) 6%, transparent) 44%,
+      color-mix(in srgb, var(--green) 6%, transparent) 64%,
+      color-mix(in srgb, var(--green) 3.5%, transparent) 64%,
+      color-mix(in srgb, var(--green) 3.5%, transparent) 82%,
+      color-mix(in srgb, var(--green) 1.5%, transparent) 82%,
+      color-mix(in srgb, var(--green) 1.5%, transparent) 100%
+    );
+}
+
+/* Garis kontur tipis di batas tiap pita: penanda ketinggian, bukan garis
+   pemisah biasa. Sengaja tidak sampai tepi kanan supaya terbaca sebagai
+   garis peta yang terpotong bingkai, bukan border kotak. */
+.garis-elevasi {
+  background-image: repeating-linear-gradient(
+    to top,
+    transparent 0,
+    transparent calc(22% - 1px),
+    color-mix(in srgb, var(--green) 26%, transparent) calc(22% - 1px),
+    color-mix(in srgb, var(--green) 26%, transparent) 22%
+  );
+}
+
+/* Pembatas antar-seksi: satu garis kontur melintang, bukan garis lurus.
+   Perubahan seksi dibaca seperti perubahan ketinggian. */
+.batas-kontur {
+  height: 24px;
+  background-repeat: repeat-x;
+  background-position: center;
+  background-size: 480px 24px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='24' viewBox='0 0 480 24'%3E%3Cg fill='none' stroke='%2316a34a' stroke-width='1.2' opacity='0.28'%3E%3Cpath d='M0 15c40-9 78-11 120-4 42 7 78 13 122 6 44-7 80-14 124-7 44 7 78 9 114 2'/%3E%3Cpath d='M0 21c40-9 78-11 120-4 42 7 78 13 122 6 44-7 80-14 124-7 44 7 78 9 114 2' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ---------- Reveal on scroll (IntersectionObserver) ---------- */
+
+/* Jarak naiknya kecil saja. Reveal yang terlalu jauh terasa seperti
+   efek yang ditempel, bukan isi yang menetap di tempatnya. Stagger 45ms
+   cukup untuk terbaca berurutan tanpa membuat menunggu. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--gerak-tenang) var(--ease-out-quint),
+    transform var(--gerak-tenang) var(--ease-out-quint);
+  transition-delay: calc(var(--reveal-index, 0) * 45ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal="shown"] {
+  will-change: auto;
+}
+
+[data-reveal="shown"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Hormati preferensi gerak minimal ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Baris pilihan yang menggulir mendatar di layar sempit ---------- */
+
+.baris-gulir {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* Wajib: tanpa ini lebar min-content anak yang tidak menyusut
+     ikut membesarkan induk (grid/flex) dan konten meluber dari layar. */
+  min-width: 0;
+  max-width: 100%;
+  /* Menembus padding induk supaya chip terakhir tidak terpotong tepi layar */
+  margin-inline: -1rem;
+  padding-inline: 1rem;
+  scroll-padding-inline: 1rem;
+}
+
+.baris-gulir::-webkit-scrollbar {
+  display: none;
+}
+
+.baris-gulir > * {
+  flex: none;
+}
+
+@media (min-width: 640px) {
+  .baris-gulir {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
+/* ---------- Kalender sobekan (tepi robek buatan CSS) ---------- */
+
+.tepi-sobek {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% 91%,
+    94% 96%, 88% 91%, 82% 96%, 76% 91%, 70% 96%,
+    64% 91%, 58% 96%, 52% 91%, 46% 96%, 40% 91%,
+    34% 96%, 28% 91%, 22% 96%, 16% 91%, 10% 96%,
+    4% 91%, 0% 96%
+  );
+}
