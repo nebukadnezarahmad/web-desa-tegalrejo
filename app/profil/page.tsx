@@ -329,17 +329,17 @@ export default function HalamanProfil() {
           deskripsi="Datang langsung pada hari kerja, atau hubungi lebih dulu bila ingin memastikan berkas."
         />
 
-        {/* Lima kolom, alamat mengambil dua. Dengan empat kolom sama lebar,
-            alamat terpecah jadi empat baris sementara tiga kartu lain hanya
-            satu baris, dan tinggi kartu yang diseragamkan grid menyisakan
-            ruang kosong besar di bawah ketiganya. */}
-        <dl className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        {/* Alamat diberi barisnya sendiri, tiga kontak lain berbagi baris
+            kedua. Menjejalkan empat kartu dalam satu baris menyisakan ruang
+            terlalu sempit: pada 1440px surel butuh 222px sementara kartunya
+            hanya menyediakan 152px, sehingga alamat surel terpatah dua. */}
+        <dl className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               ikon: MapPinIcon,
               label: "Alamat",
               isi: `${desa.alamatBalai}, ${desa.nama}, ${desa.kecamatan}, ${desa.kabupaten} ${desa.kodePos}`,
-              lebar: "lg:col-span-2",
+              lebar: "sm:col-span-2 lg:col-span-3",
             },
             { ikon: PhoneIcon, label: "Telepon", isi: desa.telepon },
             { ikon: EnvelopeSimpleIcon, label: "Surel", isi: desa.email },
