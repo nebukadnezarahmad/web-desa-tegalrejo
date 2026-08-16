@@ -14,7 +14,7 @@ import { LayananAkordeon } from "@/components/profil/layanan-akordeon";
 import { FotoDesa } from "@/components/shared/foto-desa";
 import { desa, daftarRt } from "@/lib/data/desa";
 import { perangkatDesa, visiMisi, sejarahDesa } from "@/lib/data/profil";
-import { formatAngka } from "@/lib/utils";
+import { cn, formatAngka } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Profil Desa & Layanan",
@@ -48,7 +48,10 @@ export default function HalamanProfil() {
       {/* Sejarah */}
       <Section latar="putih">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-          <div>
+          {/* Foto memanjang mengisi sisa kolom, bukan mengunci rasio potret.
+              Rasio tetap membuat kolom kiri lebih tinggi daripada teks di
+              kanan, dan sisanya jadi ruang kosong. */}
+          <div className="flex flex-col">
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-blue-strong">
               Riwayat
             </p>
@@ -58,8 +61,8 @@ export default function HalamanProfil() {
             <FotoDesa
               src="sawah-terasering.jpg"
               alt="Hamparan sawah berteras dengan barisan pohon kelapa di kejauhan"
-              rasio="potret"
-              className="mt-6 rounded-[var(--radius-card)]"
+              rasio="lanskap"
+              className="mt-6 rounded-[var(--radius-card)] lg:aspect-auto lg:min-h-[20rem] lg:flex-1"
             />
           </div>
           <div className="flex flex-col gap-5">
@@ -326,30 +329,41 @@ export default function HalamanProfil() {
           deskripsi="Datang langsung pada hari kerja, atau hubungi lebih dulu bila ingin memastikan berkas."
         />
 
-        <dl className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Lima kolom, alamat mengambil dua. Dengan empat kolom sama lebar,
+            alamat terpecah jadi empat baris sementara tiga kartu lain hanya
+            satu baris, dan tinggi kartu yang diseragamkan grid menyisakan
+            ruang kosong besar di bawah ketiganya. */}
+        <dl className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {[
             {
               ikon: MapPinIcon,
               label: "Alamat",
               isi: `${desa.alamatBalai}, ${desa.nama}, ${desa.kecamatan}, ${desa.kabupaten} ${desa.kodePos}`,
+              lebar: "lg:col-span-2",
             },
             { ikon: PhoneIcon, label: "Telepon", isi: desa.telepon },
             { ikon: EnvelopeSimpleIcon, label: "Surel", isi: desa.email },
             { ikon: ClockIcon, label: "Jam layanan", isi: desa.jamLayanan },
-          ].map(({ ikon: Ikon, label, isi }) => (
+          ].map(({ ikon: Ikon, label, isi, lebar }) => (
             <div
               key={label}
-              className="rounded-[var(--radius-card)] border border-line bg-surface p-6"
+              /* `min-w-0`: butir grid bawaannya tidak mau menyusut di bawah
+                 lebar kontennya, sehingga alamat surel yang tanpa spasi
+                 meluber keluar kartu alih-alih dipatahkan. */
+              className={cn(
+                "flex min-w-0 flex-col rounded-[var(--radius-card)] border border-line bg-surface p-6",
+                lebar,
+              )}
             >
               <Ikon
                 size={24}
                 weight="duotone"
-                className="mb-4 text-blue-strong"
+                className="mb-3.5 text-blue-strong"
               />
               <dt className="text-[0.8125rem] font-semibold text-ink-faint">
                 {label}
               </dt>
-              <dd className="mt-1.5 text-[0.9375rem] leading-relaxed text-ink">
+              <dd className="mt-1.5 break-words text-[0.9375rem] leading-relaxed text-ink">
                 {isi}
               </dd>
             </div>
