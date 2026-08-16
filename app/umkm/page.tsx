@@ -13,7 +13,6 @@ export default function HalamanUmkm() {
   return (
     <>
       <PageHeader
-        kicker="Ekonomi Warga"
         judul="Lapak UMKM warga desa"
         deskripsi="Semua yang tampil di sini dibuat atau dikerjakan sendiri oleh warga Desa Tegalrejo. Pilih produknya, hubungi langsung pemiliknya lewat WhatsApp, tanpa perantara dan tanpa potongan."
       />

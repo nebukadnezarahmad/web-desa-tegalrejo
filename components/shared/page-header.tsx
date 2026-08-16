@@ -8,7 +8,9 @@ export function PageHeader({
   tone = "green",
   children,
 }: {
-  kicker: string;
+  /** Label kecil di atas judul. Boleh dikosongkan; barisnya ikut hilang
+   *  supaya tidak menyisakan jarak menganga di atas judul. */
+  kicker?: string;
   judul: string;
   deskripsi: string;
   tone?: "green" | "blue";
@@ -33,14 +35,16 @@ export function PageHeader({
         className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface"
       />
       <div className="relative mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 md:py-18 lg:px-8">
-        <p
-          className={cn(
-            "kicker mb-3 sm:mb-4",
-            tone === "green" ? "text-green-strong" : "text-blue-strong",
-          )}
-        >
-          {kicker}
-        </p>
+        {kicker && (
+          <p
+            className={cn(
+              "kicker mb-3 sm:mb-4",
+              tone === "green" ? "text-green-strong" : "text-blue-strong",
+            )}
+          >
+            {kicker}
+          </p>
+        )}
         <h1 className="judul-display max-w-3xl text-[2rem] text-ink sm:text-[2.75rem] md:text-[3.5rem]">
           {judul}
         </h1>

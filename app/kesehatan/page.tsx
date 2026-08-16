@@ -24,7 +24,6 @@ export default function HalamanKesehatan() {
   return (
     <>
       <PageHeader
-        kicker="Kesehatan Warga"
         judul="Pantau tumbuh kembang anak sejak dini"
         deskripsi="Perawakan pendek terbentuk perlahan dan paling mudah dicegah sebelum anak berusia dua tahun. Halaman ini membantu orang tua dan kader mengenali tandanya lebih awal, lalu tahu ke mana harus melangkah."
       />

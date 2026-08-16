@@ -40,7 +40,6 @@ export default async function HalamanStatusLaporan(
   return (
     <>
       <PageHeader
-        kicker="Suara Warga"
         tone="blue"
         judul="Cek status laporan"
         deskripsi="Masukkan kode lacak yang Anda terima saat mengirim laporan."

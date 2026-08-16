@@ -24,7 +24,6 @@ export default function HalamanLapor() {
   return (
     <>
       <PageHeader
-        kicker="Suara Warga"
         tone="blue"
         judul="Lapor, kami tindak lanjuti"
         deskripsi="Jalan berlubang, lampu jalan mati, sampah menumpuk, atau masalah lain di sekitar rumah, laporkan di sini. Tidak perlu login, boleh tanpa nama."

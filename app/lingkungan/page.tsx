@@ -45,7 +45,6 @@ export default function HalamanLingkungan() {
   return (
     <>
       <PageHeader
-        kicker="Lingkungan Desa"
         judul="Yuk, jaga kelestarian lingkungan bersama"
         deskripsi="Pengelolaan sampah dimulai dari dapur masing-masing rumah. Halaman ini memuat jadwal angkut tiap RT, cara memilah yang benar, dan hasil kerja bank sampah desa sejauh ini."
       />

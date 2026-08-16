@@ -39,7 +39,6 @@ export default function HalamanProfil() {
   return (
     <>
       <PageHeader
-        kicker="Tentang Desa"
         tone="blue"
         judul={`Profil ${desa.nama}`}
         deskripsi={`${desa.luasWilayah} lahan, ${desa.jumlahDusun} dusun, ${desa.jumlahRt} RT, dan ${formatAngka(totalWarga)} warga di ${desa.kecamatan}, ${desa.kabupaten}, ${desa.provinsi}.`}
