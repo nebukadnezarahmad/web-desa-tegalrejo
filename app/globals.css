@@ -215,12 +215,90 @@ p {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='24' viewBox='0 0 480 24'%3E%3Cg fill='none' stroke='%2316a34a' stroke-width='1.2' opacity='0.28'%3E%3Cpath d='M0 15c40-9 78-11 120-4 42 7 78 13 122 6 44-7 80-14 124-7 44 7 78 9 114 2'/%3E%3Cpath d='M0 21c40-9 78-11 120-4 42 7 78 13 122 6 44-7 80-14 124-7 44 7 78 9 114 2' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E");
 }
 
+/* ---------- Buka tutup panel (Radix) ---------- */
+
+/* Radix mengukur sendiri tinggi panel dan menaruhnya di
+   --radix-accordion-content-height. Tanpa keyframes ini panelnya melompat
+   dari tertutup ke terbuka, sementara tanda panahnya berputar halus, dan
+   ketimpangan itu yang membuat interaksinya terasa patah.
+
+   Tinggi memang properti tata letak yang biasanya haram dianimasikan, tapi
+   panel akordeon tidak punya penggantinya: scaleY akan menggepengkan teks
+   di dalamnya. Ongkosnya ditekan dengan membatasi animasi ke satu panel
+   yang sedang dibuka, bukan sesuatu yang berjalan terus-menerus. */
+@keyframes panel-buka {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes panel-tutup {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+[data-slot="accordion-content"][data-state="open"] {
+  animation: panel-buka var(--gerak-cepat) var(--ease-out-quint);
+}
+
+[data-slot="accordion-content"][data-state="closed"] {
+  animation: panel-tutup var(--gerak-cepat) var(--ease-out-quint);
+}
+
+/* Popover select: muncul dari tepi pemicunya, bukan mengambang begitu saja.
+   Hanya transform dan opacity, jadi tidak menyentuh tata letak. */
+@keyframes popover-masuk {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes popover-keluar {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+
+[data-slot="select-content"][data-state="open"] {
+  transform-origin: var(--radix-select-content-transform-origin);
+  animation: popover-masuk var(--gerak-cepat) var(--ease-out-quint);
+}
+
+[data-slot="select-content"][data-state="closed"] {
+  transform-origin: var(--radix-select-content-transform-origin);
+  animation: popover-keluar var(--gerak-cepat) var(--ease-out-quint);
+}
+
 /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
 
 /* Jarak naiknya kecil saja. Reveal yang terlalu jauh terasa seperti
    efek yang ditempel, bukan isi yang menetap di tempatnya. Stagger 45ms
    cukup untuk terbaca berurutan tanpa membuat menunggu. */
-[data-reveal] {
+/* Disembunyikan hanya bila JavaScript hidup. Yang membalikkannya adalah
+   IntersectionObserver, jadi tanpa JS isinya akan hilang selamanya.
+   Kelas .js dipasang skrip sebaris di <head> sebelum lukisan pertama. */
+.js [data-reveal] {
   opacity: 0;
   transform: translateY(10px);
   transition:
@@ -251,9 +329,14 @@ p {
     scroll-behavior: auto !important;
   }
 
+  /* Spesifisitasnya harus menyamai `.js [data-reveal]` di atas. Ditulis
+     sebagai `[data-reveal]` saja, aturan ini kalah dan isinya tetap
+     tersembunyi bagi pengguna yang meminta gerak minimal. */
+  .js [data-reveal],
   [data-reveal] {
     opacity: 1;
     transform: none;
+    transition: none;
   }
 }
 

@@ -69,7 +69,7 @@ export function LapakUmkm() {
               onClick={() => setKategori(k)}
               aria-pressed={kategori === k}
               className={cn(
-                "h-11 cursor-pointer rounded-full border px-5 text-[0.9375rem] font-semibold transition-colors",
+                "h-11 cursor-pointer rounded-full border px-5 text-[0.9375rem] font-semibold transition-[transform,background-color,border-color,color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] active:scale-[0.98]",
                 kategori === k
                   ? "border-green-strong bg-green-strong text-white"
                   : "border-line-strong bg-surface text-ink-muted hover:border-green hover:text-green-strong",

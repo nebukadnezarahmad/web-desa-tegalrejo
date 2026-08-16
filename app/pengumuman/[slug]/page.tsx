@@ -122,7 +122,7 @@ export default async function HalamanDetailPengumuman(
                       size={17}
                       weight="bold"
                       aria-hidden
-                      className="shrink-0 text-blue-strong transition-transform duration-200 group-hover:translate-x-1"
+                      className="shrink-0 text-blue-strong transition-transform duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] group-hover:translate-x-1"
                     />
                   </Link>
                 </li>

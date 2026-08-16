@@ -73,7 +73,7 @@ export function SiteFooter() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="inline-block text-[0.9375rem] text-ink-muted transition-colors hover:text-green-strong"
+                      className="inline-block py-1 text-[0.9375rem] text-ink-muted transition-colors hover:text-green-strong"
                     >
                       {item.label}
                     </Link>
@@ -91,7 +91,7 @@ export function SiteFooter() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="inline-block text-[0.9375rem] text-ink-muted transition-colors hover:text-green-strong"
+                      className="inline-block py-1 text-[0.9375rem] text-ink-muted transition-colors hover:text-green-strong"
                     >
                       {item.label}
                     </Link>

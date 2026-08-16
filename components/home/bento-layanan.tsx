@@ -95,7 +95,7 @@ export function BentoLayanan() {
               <Link
                 href={k.href}
                 className={cn(
-                  "group flex h-full flex-col justify-between overflow-hidden rounded-[var(--radius-panel)] border p-6 transition-all duration-300 hover:-translate-y-0.5 sm:p-7",
+                  "group flex h-full flex-col justify-between overflow-hidden rounded-[var(--radius-panel)] border p-6 transition-[transform,border-color,box-shadow,color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] hover:-translate-y-0.5 sm:p-7",
                   hijau
                     ? "border-line bg-surface-soft hover:border-green/40 hover:shadow-lg hover:shadow-green/8"
                     : "border-line bg-surface-tint hover:border-blue/40 hover:shadow-lg hover:shadow-blue/8",
@@ -167,7 +167,7 @@ export function BentoLayanan() {
                   <ArrowUpRightIcon
                     size={15}
                     weight="bold"
-                    className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    className="transition-transform duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
                 </span>
               </Link>

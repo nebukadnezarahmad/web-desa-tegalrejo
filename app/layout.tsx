@@ -40,8 +40,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="id"
       className={`${jakarta.variable} ${bricolage.variable} h-full`}
-
     >
+      <head>
+        {/* Menandai bahwa JavaScript hidup, dijalankan sebelum lukisan
+            pertama supaya tidak ada kedipan. Animasi reveal menyembunyikan
+            isinya lewat opacity:0 dan baru menampilkannya lewat
+            IntersectionObserver; tanpa penanda ini, peramban tanpa JS akan
+            menampilkan halaman dengan bagian yang hilang selamanya. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.classList.add("js")`,
+          }}
+        />
+      </head>
       {/* `overflow-x-clip`, bukan `hidden`. Keduanya sama-sama memotong
           luberan mendatar, tapi `hidden` menjadikan body wadah gulung
           sehingga `position: sticky` di dalamnya berhenti bekerja. */}

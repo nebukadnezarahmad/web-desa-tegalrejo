@@ -35,7 +35,7 @@ export function DaftarPengumuman() {
             onClick={() => setKategori(k)}
             aria-pressed={kategori === k}
             className={cn(
-              "h-11 cursor-pointer rounded-full border px-5 text-[0.9375rem] font-semibold transition-colors",
+              "h-11 cursor-pointer rounded-full border px-5 text-[0.9375rem] font-semibold transition-[transform,background-color,border-color,color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] active:scale-[0.98]",
               kategori === k
                 ? "border-blue-strong bg-blue-strong text-white"
                 : "border-line-strong bg-surface text-ink-muted hover:border-blue hover:text-blue-strong",
@@ -99,7 +99,7 @@ export function DaftarPengumuman() {
                   size={18}
                   weight="bold"
                   aria-hidden
-                  className="hidden shrink-0 self-center text-blue-strong transition-transform duration-200 group-hover:translate-x-1 sm:block"
+                  className="hidden shrink-0 self-center text-blue-strong transition-transform duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] group-hover:translate-x-1 sm:block"
                 />
               </Link>
             </li>

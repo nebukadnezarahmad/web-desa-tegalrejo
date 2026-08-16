@@ -56,7 +56,7 @@ export function PengumumanTerbaru() {
                 <ArrowRightIcon
                   size={16}
                   weight="bold"
-                  className="text-blue-strong transition-transform duration-200 group-hover:translate-x-1"
+                  className="text-blue-strong transition-transform duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] group-hover:translate-x-1"
                 />
               </div>
             </Link>

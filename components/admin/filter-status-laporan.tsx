@@ -36,7 +36,7 @@ export function FilterStatusLaporan({
             key={opsiItem.label}
             href={opsiItem.value ? `/admin/laporan?status=${opsiItem.value}` : "/admin/laporan"}
             className={cn(
-              "inline-flex h-10 items-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-colors",
+              "inline-flex h-10 items-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-[transform,background-color,border-color,color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] active:scale-[0.98]",
               isAktif
                 ? "border-blue-strong bg-blue-strong text-white"
                 : "border-line-strong bg-surface text-ink-muted hover:border-blue-strong/50 hover:text-blue-strong",

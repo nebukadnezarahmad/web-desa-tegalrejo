@@ -37,6 +37,7 @@ function SelectContent({
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
+        data-slot="select-content"
         position="popper"
         sideOffset={6}
         className={cn(
@@ -61,7 +62,12 @@ function SelectItem({
   return (
     <SelectPrimitive.Item
       className={cn(
-        "relative flex cursor-pointer select-none items-center justify-between gap-2 rounded-lg px-3.5 py-2.5 text-[0.9375rem] text-ink outline-none transition-colors data-[highlighted]:bg-green-soft data-[highlighted]:text-green-deep",
+        /* Radix memindahkan fokus DOM ke butir yang disorot, jadi outline
+           bawaan dimatikan supaya tidak bertabrakan dengan sorotan Radix.
+           Penggantinya harus sekuat outline: latar hijau saja terlalu tipis
+           di atas popover putih untuk dibaca sebagai penanda fokus. */
+        "relative flex cursor-pointer select-none items-center justify-between gap-2 rounded-lg px-3.5 py-2.5 text-[0.9375rem] text-ink outline-none transition-colors",
+        "data-[highlighted]:bg-green-soft data-[highlighted]:text-green-deep data-[highlighted]:ring-2 data-[highlighted]:ring-inset data-[highlighted]:ring-green-strong",
         className,
       )}
       {...props}

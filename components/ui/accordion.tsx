@@ -40,7 +40,7 @@ function AccordionTrigger({
         <CaretDownIcon
           size={18}
           weight="bold"
-          className="shrink-0 text-blue-strong transition-transform duration-300"
+          className="shrink-0 text-blue-strong transition-transform duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)]"
         />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
@@ -54,7 +54,8 @@ function AccordionContent({
 }: React.ComponentProps<typeof AccordionPrimitive.Content>) {
   return (
     <AccordionPrimitive.Content
-      className="overflow-hidden data-[state=closed]:animate-none"
+      data-slot="accordion-content"
+      className="overflow-hidden"
       {...props}
     >
       <div className={cn("border-t border-line px-5 py-4", className)}>

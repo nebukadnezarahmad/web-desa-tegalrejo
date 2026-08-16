@@ -51,7 +51,7 @@ export function BottomNav() {
                 href={href}
                 aria-current={ini ? "page" : undefined}
                 className={cn(
-                  "flex h-16 w-full flex-col items-center justify-center gap-1 px-0.5 transition-colors",
+                  "flex h-16 w-full flex-col items-center justify-center gap-1 px-0.5 transition-[transform,color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] active:scale-[0.96]",
                   ini ? "text-green-strong" : "text-ink-faint",
                 )}
               >

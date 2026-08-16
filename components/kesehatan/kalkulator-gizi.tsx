@@ -107,7 +107,17 @@ export function KalkulatorGizi() {
     );
 
     requestAnimationFrame(() => {
-      hasilRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      /* `behavior` yang ditulis eksplisit mengalahkan properti CSS
+         scroll-behavior, termasuk penimpaan !important di blok
+         prefers-reduced-motion. Preferensinya harus dibaca di sini. */
+      const kurangiGerak = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      hasilRef.current?.scrollIntoView({
+        behavior: kurangiGerak ? "auto" : "smooth",
+        block: "nearest",
+      });
     });
   }
 
@@ -157,7 +167,7 @@ export function KalkulatorGizi() {
                 onClick={() => setJenisKelamin(o.nilai)}
                 aria-pressed={jenisKelamin === o.nilai}
                 className={cn(
-                  "h-11 cursor-pointer rounded-full border text-[0.9375rem] font-semibold transition-colors",
+                  "h-11 cursor-pointer rounded-full border text-[0.9375rem] font-semibold transition-[transform,background-color,border-color,color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] active:scale-[0.98]",
                   jenisKelamin === o.nilai
                     ? "border-green-strong bg-green-strong text-white"
                     : "border-line-strong bg-surface text-ink-muted hover:border-green",
