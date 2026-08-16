@@ -308,13 +308,14 @@ p {
   will-change: opacity, transform;
 }
 
-[data-reveal="shown"] {
-  will-change: auto;
-}
-
-[data-reveal="shown"] {
+/* Awalan `.js` wajib diulang di sini. Aturan penyembunyian di atas memakai
+   `.js [data-reveal]`, dan `[data-reveal="shown"]` polos kalah spesifisitas
+   melawannya, sehingga isinya tetap gelap meski observer sudah menandainya
+   tampil. */
+.js [data-reveal="shown"] {
   opacity: 1;
   transform: none;
+  will-change: auto;
 }
 
 /* ---------- Hormati preferensi gerak minimal ---------- */
