@@ -38,21 +38,32 @@ export default function HalamanLapor() {
         </Link>
       </PageHeader>
 
+      {/**
+       * Formulir dan daftar laporan disandingkan dua kolom supaya keduanya
+       * terlihat tanpa menggulung jauh. Kolom formulir dibuat lengket agar
+       * tetap terjangkau selagi warga membaca laporan tetangga di sebelahnya.
+       */}
       <Section latar="putih">
-        <div className="mx-auto max-w-xl">
-          <FormLaporan />
-        </div>
-      </Section>
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+          {/* `self-start` wajib: butir grid meregang penuh secara bawaan,
+              dan sticky tidak bekerja pada elemen setinggi kolomnya. */}
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <FormLaporan />
+          </div>
 
-      <Section latar="lembut" id="daftar" className="scroll-mt-20">
-        <div className="mx-auto max-w-2xl">
-          <SectionHeading
-            kicker="Sudah Ditindaklanjuti"
-            tone="blue"
-            judul="Laporan warga lainnya"
-            deskripsi="Laporan yang sudah ditinjau petugas, tanpa nama atau kontak pelapor. Laporan baru tampil setelah diperiksa."
-          />
-          <DaftarLaporan />
+          <div
+            id="daftar"
+            className="scroll-mt-24 rounded-[var(--radius-panel)] border border-line bg-surface-soft p-6 sm:p-8"
+          >
+            <SectionHeading
+              kicker="Sudah Ditindaklanjuti"
+              tone="blue"
+              judul="Laporan warga lainnya"
+              deskripsi="Laporan yang sudah ditinjau petugas, tanpa nama atau kontak pelapor. Laporan baru tampil setelah diperiksa."
+              className="mb-7 md:mb-8 md:flex-col md:items-start"
+            />
+            <DaftarLaporan />
+          </div>
         </div>
       </Section>
     </>

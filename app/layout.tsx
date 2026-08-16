@@ -42,7 +42,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${jakarta.variable} ${bricolage.variable} h-full`}
 
     >
-      <body className="flex min-h-full flex-col overflow-x-hidden">
+      {/* `overflow-x-clip`, bukan `hidden`. Keduanya sama-sama memotong
+          luberan mendatar, tapi `hidden` menjadikan body wadah gulung
+          sehingga `position: sticky` di dalamnya berhenti bekerja. */}
+      <body className="flex min-h-full flex-col overflow-x-clip">
         <a
           href="#konten"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-green-strong focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
