@@ -231,3 +231,70 @@ export async function kelolaProdukTerbit(
         : "Produk ditarik dari lapak, kembali ke antrean tinjauan.",
   };
 }
+
+const SkemaSuntingProduk = z.object({
+  id: z.string().uuid(),
+  nama: z.string().trim().min(3, "Nama produk minimal 3 karakter.").max(120),
+  kategori: z.enum(["Makanan", "Kerajinan", "Pertanian", "Jasa"]),
+  harga: z.coerce.number().int().min(0, "Harga tidak boleh negatif.").max(100_000_000),
+  satuan: z.string().trim().min(1, "Satuan wajib diisi.").max(60),
+  deskripsi: z.string().trim().min(20, "Deskripsi minimal 20 karakter.").max(400),
+  usaha: z.string().trim().min(3, "Nama usaha wajib diisi.").max(120),
+  pemilik: z.string().trim().min(3, "Nama pemilik wajib diisi.").max(120),
+  whatsapp: z
+    .string()
+    .trim()
+    .regex(/^0\d{8,14}$/, "Nomor WhatsApp diawali 0, panjang 9 sampai 15 angka."),
+  unggulan: z.boolean(),
+});
+
+/**
+ * Penyuntingan produk oleh petugas.
+ *
+ * Slug sengaja tidak ikut berubah walau namanya diganti. Tautan produk
+ * mungkin sudah tersebar di grup warga, dan mengubah slug akan mematikan
+ * tautan itu tanpa pemberitahuan.
+ */
+export async function suntingProduk(
+  _sebelumnya: HasilAksi,
+  formData: FormData,
+): Promise<HasilAksi> {
+  if (!(await sesiAdminValid())) {
+    return { berhasil: false, pesan: "Sesi berakhir. Masuk kembali." };
+  }
+
+  const parsed = SkemaSuntingProduk.safeParse({
+    id: formData.get("id"),
+    nama: formData.get("nama"),
+    kategori: formData.get("kategori"),
+    harga: formData.get("harga"),
+    satuan: formData.get("satuan"),
+    deskripsi: formData.get("deskripsi"),
+    usaha: formData.get("usaha"),
+    pemilik: formData.get("pemilik"),
+    whatsapp: formData.get("whatsapp"),
+    unggulan: formData.get("unggulan") === "on",
+  });
+
+  if (!parsed.success) {
+    return {
+      berhasil: false,
+      pesan: parsed.error.issues[0]?.message ?? "Data tidak valid.",
+    };
+  }
+
+  const { id, ...isi } = parsed.data;
+
+  const { error } = await klienService()
+    .from("produk_umkm")
+    .update(isi)
+    .eq("id", id);
+
+  if (error) return { berhasil: false, pesan: `Gagal menyimpan: ${error.message}` };
+
+  revalidatePath("/umkm");
+  revalidatePath(`/umkm`);
+  revalidatePath("/");
+  revalidatePath("/admin/laporan");
+  return { berhasil: true, pesan: "Perubahan tersimpan." };
+}

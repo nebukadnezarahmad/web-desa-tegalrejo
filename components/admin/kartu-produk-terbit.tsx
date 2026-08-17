@@ -20,8 +20,12 @@ import {
 } from "@/components/ui/dialog";
 import {
   kelolaProdukTerbit,
+  suntingProduk,
   type HasilAksi,
 } from "@/app/admin/laporan/actions-tambahan";
+import { Input, Label } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { kategoriUmkm } from "@/lib/data/umkm";
 import type { KategoriUmkm } from "@/lib/data/umkm";
 import { formatRupiah } from "@/lib/utils";
 
@@ -32,8 +36,12 @@ export type BarisProduk = {
   kategori: KategoriUmkm;
   harga: number;
   satuan: string;
+  deskripsi: string;
+  pemilik: string;
   usaha: string;
   dusun: string;
+  whatsapp: string;
+  unggulan: boolean;
   foto: string | null;
 };
 
@@ -122,22 +130,7 @@ function KartuProdukTerbit({ produk }: { produk: BarisProduk }) {
           className="rounded-[var(--radius-card)]"
         />
 
-        <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-[0.9375rem]">
-          <div>
-            <dt className="text-[0.75rem] font-bold uppercase tracking-[0.08em] text-ink-faint">
-              Kategori
-            </dt>
-            <dd className="mt-0.5 text-ink">{produk.kategori}</dd>
-          </div>
-          <div>
-            <dt className="text-[0.75rem] font-bold uppercase tracking-[0.08em] text-ink-faint">
-              Harga
-            </dt>
-            <dd className="mt-0.5 text-ink">
-              {formatRupiah(produk.harga)} / {produk.satuan}
-            </dd>
-          </div>
-        </dl>
+        <FormSunting produk={produk} />
 
         {hasil && !hasil.berhasil && (
           <p role="alert" className="mt-4 text-[0.875rem] text-danger">
@@ -202,5 +195,91 @@ function KartuProdukTerbit({ produk }: { produk: BarisProduk }) {
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function FormSunting({ produk }: { produk: BarisProduk }) {
+  const [hasil, kirim, menyimpan] = useActionState(suntingProduk, awal);
+
+  return (
+    <form action={kirim} className="mt-5 flex flex-col gap-4 border-t border-line pt-5">
+      <input type="hidden" name="id" value={produk.id} />
+
+      <p className="text-[0.75rem] font-bold uppercase tracking-[0.08em] text-ink-faint">
+        Sunting data produk
+      </p>
+
+      <div>
+        <Label htmlFor={`nama-${produk.id}`}>Nama produk</Label>
+        <Input id={`nama-${produk.id}`} name="nama" required
+          defaultValue={produk.nama} className="mt-1.5" />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div>
+          <Label htmlFor={`kat-${produk.id}`}>Kategori</Label>
+          <select id={`kat-${produk.id}`} name="kategori" defaultValue={produk.kategori}
+            className="mt-1.5 h-11 w-full cursor-pointer rounded-[var(--radius-chip)] border border-line-strong bg-surface px-3.5 text-[0.9375rem] text-ink transition-colors hover:border-green focus:border-green-strong">
+            {kategoriUmkm.map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </div>
+        <div>
+          <Label htmlFor={`harga-${produk.id}`}>Harga (Rp)</Label>
+          <Input id={`harga-${produk.id}`} name="harga" inputMode="numeric" required
+            defaultValue={produk.harga} className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor={`satuan-${produk.id}`}>Satuan</Label>
+          <Input id={`satuan-${produk.id}`} name="satuan" required
+            defaultValue={produk.satuan} className="mt-1.5" />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor={`desk-${produk.id}`}>Deskripsi</Label>
+        <Textarea id={`desk-${produk.id}`} name="deskripsi" rows={3} required
+          defaultValue={produk.deskripsi} className="mt-1.5" />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div>
+          <Label htmlFor={`usaha-${produk.id}`}>Nama usaha</Label>
+          <Input id={`usaha-${produk.id}`} name="usaha" required
+            defaultValue={produk.usaha} className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor={`pemilik-${produk.id}`}>Pemilik</Label>
+          <Input id={`pemilik-${produk.id}`} name="pemilik" required
+            defaultValue={produk.pemilik} className="mt-1.5" />
+        </div>
+        <div>
+          <Label htmlFor={`wa-${produk.id}`}>WhatsApp</Label>
+          <Input id={`wa-${produk.id}`} name="whatsapp" inputMode="tel" required
+            defaultValue={produk.whatsapp} className="mt-1.5" />
+        </div>
+      </div>
+
+      <label className="flex cursor-pointer items-center gap-3 rounded-[var(--radius-card)] border border-line bg-surface-soft p-4">
+        <input type="checkbox" name="unggulan" defaultChecked={produk.unggulan}
+          className="h-5 w-5 cursor-pointer accent-[var(--green-strong)]" />
+        <span className="text-[0.9375rem] text-ink">
+          Tandai unggulan
+          <span className="block text-[0.8125rem] text-ink-muted">
+            Ikut tampil di sorotan UMKM pada beranda.
+          </span>
+        </span>
+      </label>
+
+      {hasil && (
+        <p role="status" className={hasil.berhasil
+          ? "text-[0.875rem] text-green-strong" : "text-[0.875rem] text-danger"}>
+          {hasil.pesan}
+        </p>
+      )}
+
+      <Button type="submit" variant="info" disabled={menyimpan}>
+        {menyimpan ? "Menyimpan…" : "Simpan perubahan"}
+      </Button>
+    </form>
   );
 }

@@ -70,7 +70,7 @@ export default async function HalamanAdminLaporan(
   /* Isi yang sudah tayang, untuk dikelola ulang oleh petugas. */
   const { data: dataProdukTerbit } = await supabase
     .from("produk_umkm")
-    .select("id, slug, nama, kategori, harga, satuan, usaha, dusun, foto")
+    .select("id, slug, nama, kategori, harga, satuan, deskripsi, pemilik, usaha, dusun, whatsapp, unggulan, foto")
     .eq("status", "terbit")
     .order("nama");
 

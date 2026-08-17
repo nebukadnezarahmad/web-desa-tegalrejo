@@ -28,14 +28,11 @@ export function FormLaporan() {
   const [hasil, kirim, mengirim] = useActionState(kirimLaporan, stateAwal);
   const [kategori, setKategori] = React.useState<string>("");
   const [disalin, setDisalin] = React.useState(false);
-  const formRef = React.useRef<HTMLFormElement>(null);
 
-  React.useEffect(() => {
-    if (hasil?.berhasil) {
-      formRef.current?.reset();
-      setKategori("");
-    }
-  }, [hasil]);
+  /* Tidak ada pembersihan formulir di sini. Begitu pengiriman berhasil,
+     komponen merender layar "Laporan terkirim" dan formulirnya dilepas dari
+     DOM, jadi tidak ada yang perlu dibersihkan. Satu-satunya jalan kembali
+     ke formulir adalah tombol yang memuat ulang halaman. */
 
   if (hasil?.berhasil) {
     const salinKode = async () => {
@@ -99,7 +96,7 @@ export function FormLaporan() {
   }
 
   return (
-    <form ref={formRef} action={kirim} className="flex flex-col gap-5">
+    <form action={kirim} className="flex flex-col gap-5">
       {hasil && !hasil.berhasil && (
         <div
           role="alert"
