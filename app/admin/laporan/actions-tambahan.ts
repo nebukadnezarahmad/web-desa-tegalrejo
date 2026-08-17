@@ -155,3 +155,79 @@ export async function tinjauUsulanProduk(
     pesan: keputusan === "terbit" ? "Produk sudah tayang." : "Usulan ditolak.",
   };
 }
+
+// ------------------------------------------------------------------
+// Mengelola isi yang sudah terbit
+// ------------------------------------------------------------------
+
+const SkemaHapusPengumuman = z.object({ slug: z.string().min(1) });
+
+export async function hapusPengumuman(
+  _sebelumnya: HasilAksi,
+  formData: FormData,
+): Promise<HasilAksi> {
+  if (!(await sesiAdminValid())) {
+    return { berhasil: false, pesan: "Sesi berakhir. Masuk kembali." };
+  }
+
+  const parsed = SkemaHapusPengumuman.safeParse({ slug: formData.get("slug") });
+  if (!parsed.success) return { berhasil: false, pesan: "Data tidak valid." };
+
+  const { error } = await klienService()
+    .from("pengumuman")
+    .delete()
+    .eq("slug", parsed.data.slug);
+
+  if (error) return { berhasil: false, pesan: `Gagal menghapus: ${error.message}` };
+
+  revalidatePath("/pengumuman");
+  revalidatePath("/");
+  revalidatePath("/admin/laporan");
+  return { berhasil: true, pesan: "Pengumuman dihapus." };
+}
+
+const SkemaKelolaProduk = z.object({
+  id: z.string().uuid(),
+  /* "tarik" mengembalikan produk ke antrean tinjauan, bukan menghapusnya.
+     Menghapus akan melenyapkan data usaha warga yang mungkin masih dipakai. */
+  tindakan: z.enum(["tarik", "hapus"]),
+});
+
+export async function kelolaProdukTerbit(
+  _sebelumnya: HasilAksi,
+  formData: FormData,
+): Promise<HasilAksi> {
+  if (!(await sesiAdminValid())) {
+    return { berhasil: false, pesan: "Sesi berakhir. Masuk kembali." };
+  }
+
+  const parsed = SkemaKelolaProduk.safeParse({
+    id: formData.get("id"),
+    tindakan: formData.get("tindakan"),
+  });
+  if (!parsed.success) return { berhasil: false, pesan: "Data tidak valid." };
+
+  const supabase = klienService();
+  const { id, tindakan } = parsed.data;
+
+  const { error } =
+    tindakan === "hapus"
+      ? await supabase.from("produk_umkm").delete().eq("id", id)
+      : await supabase
+          .from("produk_umkm")
+          .update({ status: "menunggu" })
+          .eq("id", id);
+
+  if (error) return { berhasil: false, pesan: `Gagal: ${error.message}` };
+
+  revalidatePath("/umkm");
+  revalidatePath("/");
+  revalidatePath("/admin/laporan");
+  return {
+    berhasil: true,
+    pesan:
+      tindakan === "hapus"
+        ? "Produk dihapus."
+        : "Produk ditarik dari lapak, kembali ke antrean tinjauan.",
+  };
+}

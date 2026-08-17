@@ -15,6 +15,13 @@ import {
   type UsulanProduk,
 } from "@/components/admin/kartu-usulan-produk";
 import { SectionHeading } from "@/components/shared/section";
+import { TabAdmin, tabValid } from "@/components/admin/tab-admin";
+import {
+  DaftarPengumumanTerbit,
+  DaftarProdukTerbit,
+  type BarisPengumuman,
+  type BarisProduk,
+} from "@/components/admin/daftar-terbit";
 import { desa } from "@/lib/data/desa";
 
 export const metadata: Metadata = {
@@ -36,6 +43,7 @@ export default async function HalamanAdminLaporan(
 ) {
   const params = await props.searchParams;
   const filterStatus = statusValid(params.status) ? params.status : null;
+  const tab = tabValid(params.tab) ? params.tab : "laporan";
 
   const supabase = klienService();
   const { data } = await supabase
@@ -56,6 +64,21 @@ export default async function HalamanAdminLaporan(
     .order("dibuat_pada", { ascending: true });
 
   const usulan = (dataUsulan ?? []) as UsulanProduk[];
+
+  /* Isi yang sudah tayang, untuk dikelola ulang oleh petugas. */
+  const { data: dataProdukTerbit } = await supabase
+    .from("produk_umkm")
+    .select("id, slug, nama, kategori, harga, satuan, usaha, dusun")
+    .eq("status", "terbit")
+    .order("nama");
+
+  const { data: dataPengumuman } = await supabase
+    .from("pengumuman")
+    .select("slug, judul, kategori, tanggal, penerbit, penting")
+    .order("tanggal", { ascending: false });
+
+  const produkTerbit = (dataProdukTerbit ?? []) as BarisProduk[];
+  const pengumumanTerbit = (dataPengumuman ?? []) as BarisPengumuman[];
   const jumlah = {
     semua: semuaLaporan.length,
     menunggu: 0,
@@ -86,6 +109,13 @@ export default async function HalamanAdminLaporan(
         </form>
       </PageHeader>
 
+      <TabAdmin
+        aktif={tab}
+        jumlahLaporan={jumlah.semua}
+        jumlahUsulan={usulan.length}
+      />
+
+      {tab === "laporan" && (
       <Section latar="putih">
         <FilterStatusLaporan aktif={filterStatus} jumlah={jumlah} />
 
@@ -94,15 +124,17 @@ export default async function HalamanAdminLaporan(
             Belum ada laporan{filterStatus ? " dengan status ini" : ""}.
           </p>
         ) : (
-          <div className="mt-8 flex flex-col gap-5">
+          <div className="mt-8 grid items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {laporanTampil.map((laporan) => (
               <KartuLaporanAdmin key={laporan.id} laporan={laporan} />
             ))}
           </div>
         )}
       </Section>
+      )}
 
       {/* Usulan produk dari warga */}
+      {tab === "produk" && (
       <Section latar="lembut" id="usulan-umkm" className="scroll-mt-20">
         <SectionHeading
           kicker="Lapak UMKM"
@@ -121,9 +153,21 @@ export default async function HalamanAdminLaporan(
             ))}
           </div>
         )}
+
+        <div className="mt-12">
+          <SectionHeading
+            kicker="Sudah Tayang"
+            judul="Produk di lapak"
+            deskripsi="Produk yang sedang tampil untuk warga. Tarik untuk mengembalikannya ke antrean tinjauan."
+            className="mb-6 md:mb-7 md:flex-col md:items-start"
+          />
+          <DaftarProdukTerbit baris={produkTerbit} />
+        </div>
       </Section>
+      )}
 
       {/* Tambah pengumuman */}
+      {tab === "pengumuman" && (
       <Section latar="putih" id="tambah-pengumuman" className="scroll-mt-20">
         <SectionHeading
           kicker="Kabar Resmi"
@@ -132,7 +176,19 @@ export default async function HalamanAdminLaporan(
           deskripsi="Isi yang disimpan di sini langsung tampil di halaman pengumuman dan beranda."
         />
         <FormPengumuman hariIni={new Date().toISOString().slice(0, 10)} />
+
+        <div className="mt-12">
+          <SectionHeading
+            kicker="Sudah Tayang"
+            tone="blue"
+            judul="Pengumuman terbit"
+            deskripsi="Seluruh pengumuman yang sedang tampil di situs."
+            className="mb-6 md:mb-7 md:flex-col md:items-start"
+          />
+          <DaftarPengumumanTerbit baris={pengumumanTerbit} />
+        </div>
       </Section>
+      )}
     </>
   );
 }
