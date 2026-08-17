@@ -8,6 +8,7 @@ import { UmkmPreview } from "@/components/home/umkm-preview";
 import { Button } from "@/components/ui/button";
 import { desa } from "@/lib/data/desa";
 import { layananAdministrasi } from "@/lib/data/profil";
+import { KartuLayananSurat } from "@/components/home/kartu-layanan-surat";
 
 export default function Beranda() {
   return (
@@ -56,23 +57,7 @@ export default function Beranda() {
               </p>
             </div>
 
-            <ul className="grid gap-2.5 sm:grid-cols-2">
-              {layananAdministrasi.map((l) => (
-                <li key={l.nama}>
-                  <Link
-                    href="/profil#layanan"
-                    className="flex h-full flex-col justify-between rounded-[var(--radius-card)] border border-line bg-surface p-4 transition-colors hover:border-blue/40"
-                  >
-                    <span className="text-[0.9375rem] font-semibold leading-snug text-ink">
-                      {l.nama}
-                    </span>
-                    <span className="mt-2 text-[0.8125rem] text-ink-faint">
-                      {l.estimasi}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <KartuLayananSurat layanan={layananAdministrasi} />
           </div>
         </div>
       </section>
