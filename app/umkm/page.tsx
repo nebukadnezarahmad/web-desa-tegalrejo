@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/page-header";
 import { Section } from "@/components/shared/section";
 import { LapakUmkm } from "@/components/umkm/lapak-umkm";
+import { ambilSemuaProduk } from "@/lib/umkm/queries";
 
 export const metadata: Metadata = {
   title: "Lapak UMKM Warga",
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
     "Produk buatan warga Desa Tegalrejo: makanan olahan, kerajinan, hasil pertanian, dan jasa. Hubungi langsung pemiliknya tanpa perantara.",
 };
 
-export default function HalamanUmkm() {
+/** Wajib dinamis: isinya dibaca dari Supabase. Tanpa ini Next memprerender
+ *  hasilnya sekali saat build dan data baru tidak pernah muncul. */
+export const dynamic = "force-dynamic";
+
+export default async function HalamanUmkm() {
+  const produkUmkm = await ambilSemuaProduk();
+
   return (
     <>
       <PageHeader
@@ -17,7 +24,7 @@ export default function HalamanUmkm() {
         deskripsi="Semua yang tampil di sini dibuat atau dikerjakan sendiri oleh warga Desa Tegalrejo. Pilih produknya, hubungi langsung pemiliknya lewat WhatsApp, tanpa perantara dan tanpa potongan."
       />
       <Section latar="putih">
-        <LapakUmkm />
+        <LapakUmkm produkUmkm={produkUmkm} />
       </Section>
     </>
   );

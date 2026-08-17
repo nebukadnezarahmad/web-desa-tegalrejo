@@ -67,7 +67,17 @@ export function ProdukThumb({
 
   if (foto) {
     return (
-      <div className={cn("relative overflow-hidden", rasio, className)}>
+      /* Latar lembut wajib ada di balik foto. Dua belas foto di lapak
+         dimuat malas, dan tanpa latar kotaknya putih polos selama menunggu
+         sehingga terbaca sebagai gambar yang hilang, bukan gambar yang
+         sedang datang. */
+      <div
+        className={cn(
+          "relative overflow-hidden bg-surface-soft",
+          rasio,
+          className,
+        )}
+      >
         <Image
           src={`/foto/${foto}`}
           alt={alt ?? ""}

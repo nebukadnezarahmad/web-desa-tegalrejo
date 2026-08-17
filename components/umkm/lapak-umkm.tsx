@@ -6,12 +6,16 @@ import { MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ProdukThumb } from "@/components/umkm/produk-thumb";
-import { produkUmkm, kategoriUmkm, type KategoriUmkm } from "@/lib/data/umkm";
+import {
+  kategoriUmkm,
+  type KategoriUmkm,
+  type Produk,
+} from "@/lib/data/umkm";
 import { cn, formatRupiah } from "@/lib/utils";
 
 type Filter = KategoriUmkm | "Semua";
 
-export function LapakUmkm() {
+export function LapakUmkm({ produkUmkm }: { produkUmkm: Produk[] }) {
   const [kategori, setKategori] = React.useState<Filter>("Semua");
   const [cari, setCari] = React.useState("");
 
@@ -29,7 +33,7 @@ export function LapakUmkm() {
         p.deskripsi.toLowerCase().includes(kunci)
       );
     });
-  }, [kategori, cari]);
+  }, [kategori, cari, produkUmkm]);
 
   const filterAktif = kategori !== "Semua" || cari.trim() !== "";
 

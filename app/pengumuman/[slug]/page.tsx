@@ -9,18 +9,22 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { Section } from "@/components/shared/section";
 import { Badge } from "@/components/ui/badge";
-import { pengumuman, ambilPengumuman } from "@/lib/data/pengumuman";
+import {
+  ambilPengumuman,
+  ambilSemuaPengumuman,
+} from "@/lib/pengumuman/queries";
 import { formatTanggal } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return pengumuman.map((p) => ({ slug: p.slug }));
-}
+/** Wajib dinamis: isinya dibaca dari Supabase. generateStaticParams dilepas
+ *  karena daftar slug kini berubah setiap petugas menambah atau menerima
+ *  isian baru, dan tidak lagi diketahui saat build. */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(
   props: PageProps<"/pengumuman/[slug]">,
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const item = ambilPengumuman(slug);
+  const item = await ambilPengumuman(slug);
   if (!item) return { title: "Pengumuman tidak ditemukan" };
   return { title: item.judul, description: item.ringkasan };
 }
@@ -29,10 +33,10 @@ export default async function HalamanDetailPengumuman(
   props: PageProps<"/pengumuman/[slug]">,
 ) {
   const { slug } = await props.params;
-  const item = ambilPengumuman(slug);
+  const item = await ambilPengumuman(slug);
   if (!item) notFound();
 
-  const lainnya = pengumuman
+  const lainnya = (await ambilSemuaPengumuman())
     .filter((p) => p.slug !== item.slug && p.kategori === item.kategori)
     .slice(0, 2);
 

@@ -13,21 +13,21 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProdukThumb } from "@/components/umkm/produk-thumb";
 import {
-  produkUmkm,
   ambilProduk,
   produkLainDariPenjual,
-} from "@/lib/data/umkm";
+} from "@/lib/umkm/queries";
 import { formatRupiah, tautanWhatsApp } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return produkUmkm.map((p) => ({ slug: p.slug }));
-}
+/** Wajib dinamis: isinya dibaca dari Supabase. generateStaticParams dilepas
+ *  karena daftar slug kini berubah setiap petugas menambah atau menerima
+ *  isian baru, dan tidak lagi diketahui saat build. */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(
   props: PageProps<"/umkm/[slug]">,
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const produk = ambilProduk(slug);
+  const produk = await ambilProduk(slug);
   if (!produk) return { title: "Produk tidak ditemukan" };
   return {
     title: produk.nama,
@@ -37,10 +37,10 @@ export async function generateMetadata(
 
 export default async function HalamanProduk(props: PageProps<"/umkm/[slug]">) {
   const { slug } = await props.params;
-  const produk = ambilProduk(slug);
+  const produk = await ambilProduk(slug);
   if (!produk) notFound();
 
-  const lainnya = produkLainDariPenjual(produk.usaha, produk.slug);
+  const lainnya = await produkLainDariPenjual(produk.usaha, produk.slug);
   const hijau =
     produk.kategori === "Makanan" || produk.kategori === "Pertanian";
 

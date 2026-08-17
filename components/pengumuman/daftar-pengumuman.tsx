@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRightIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 import {
-  pengumuman,
+  type Pengumuman,
   kategoriPengumuman,
   type KategoriPengumuman,
 } from "@/lib/data/pengumuman";
@@ -13,9 +13,16 @@ import { cn, formatTanggal } from "@/lib/utils";
 
 type Filter = KategoriPengumuman | "Semua";
 
-const urut = [...pengumuman].sort((a, b) => b.tanggal.localeCompare(a.tanggal));
 
-export function DaftarPengumuman() {
+
+export function DaftarPengumuman({ pengumuman }: { pengumuman: Pengumuman[] }) {
+  /* Sudah diurutkan basis data menurut tanggal menurun, tapi urutan tetap
+     dipastikan di sini supaya komponen tidak bergantung pada urutan query. */
+  const urut = React.useMemo(
+    () => [...pengumuman].sort((a, b) => b.tanggal.localeCompare(a.tanggal)),
+    [pengumuman],
+  );
+
   const [kategori, setKategori] = React.useState<Filter>("Semua");
 
   const hasil =

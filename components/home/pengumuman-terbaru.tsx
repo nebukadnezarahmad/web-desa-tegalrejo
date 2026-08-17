@@ -4,10 +4,12 @@ import { Section, SectionHeading } from "@/components/shared/section";
 import { Reveal } from "@/components/shared/reveal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { pengumumanTerbaru } from "@/lib/data/pengumuman";
+import { ambilPengumumanTerbaru } from "@/lib/pengumuman/queries";
 import { formatTanggal } from "@/lib/utils";
 
-export function PengumumanTerbaru() {
+export async function PengumumanTerbaru() {
+  const pengumumanTerbaru = await ambilPengumumanTerbaru(3);
+
   // Ritme rapat, ini cuplikan tiga kabar, bukan bacaan panjang.
   return (
     <Section latar="putih" ritme="rapat">

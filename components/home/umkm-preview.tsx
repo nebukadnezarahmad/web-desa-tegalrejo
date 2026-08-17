@@ -6,17 +6,28 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProdukThumb } from "@/components/umkm/produk-thumb";
 import { FotoDesa } from "@/components/shared/foto-desa";
-import { produkUmkm, produkUnggulan } from "@/lib/data/umkm";
+import { ambilSemuaProduk, ambilProdukUnggulan } from "@/lib/umkm/queries";
 import { formatRupiah } from "@/lib/utils";
 
 // Produk Bu Marni yang sama disebut di headline beranda, sengaja ditautkan
 // supaya klaim di hero terasa nyata, bukan angan-angan copywriting.
 /* Utamakan produk unggulan yang sudah punya foto. Kartu sorotan ini paling
    besar di beranda, jadi paling terasa kalau isinya cuma ilustrasi ikon. */
-const sorotan = produkUnggulan.find((p) => p.foto) ?? produkUnggulan[0];
-const lainnya = produkUmkm.filter((p) => p.slug !== sorotan.slug).slice(0, 3);
+export async function UmkmPreview() {
+  const [produkUmkm, produkUnggulan] = await Promise.all([
+    ambilSemuaProduk(),
+    ambilProdukUnggulan(4),
+  ]);
 
-export function UmkmPreview() {
+  /* Utamakan produk unggulan yang sudah punya foto. Kartu sorotan ini paling
+     besar di beranda, jadi paling terasa kalau isinya cuma ilustrasi ikon. */
+  const sorotan = produkUnggulan.find((p) => p.foto) ?? produkUnggulan[0];
+  const lainnya = produkUmkm.filter((p) => p.slug !== sorotan?.slug).slice(0, 3);
+
+  /* Lapak kosong bukan galat: bisa jadi semua usulan masih menunggu tinjauan.
+     Seksi ini dilewati saja daripada merobohkan beranda. */
+  if (!sorotan) return null;
+
   const hijau = sorotan.kategori === "Makanan" || sorotan.kategori === "Pertanian";
 
   return (
