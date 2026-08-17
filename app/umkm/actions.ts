@@ -111,7 +111,11 @@ export async function usulkanProduk(
       };
     }
 
-    namaFoto = berkas;
+    /* Disimpan sebagai URL penuh, bukan nama berkas. Foto bawaan ada di
+       public/foto sedangkan unggahan warga ada di bucket Storage; tanpa
+       pembeda, perangkai jalur akan menunjuk ke tempat yang salah. */
+    const { data: pub } = supabase.storage.from("produk-umkm").getPublicUrl(berkas);
+    namaFoto = pub.publicUrl;
   }
 
   const dasar = jadikanSlug(d.nama);

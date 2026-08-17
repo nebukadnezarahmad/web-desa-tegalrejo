@@ -68,7 +68,13 @@ export function Hero() {
               </Button>
             </div>
 
-            <ul className="baris-gulir mt-7 sm:mt-10">
+            {/* Membungkus, bukan menggulung ke samping. Pintasan di sini
+                cuma tiga dan semuanya setara pentingnya; baris bergulir
+                menyembunyikan yang terakhir di balik tepi layar sehingga
+                terbaca sebagai tombol terpotong, bukan tombol tersembunyi.
+                Kelas .baris-gulir tetap dipakai untuk deretan penyaring
+                yang isinya memang banyak dan tak tentu jumlahnya. */}
+            <ul className="mt-7 flex flex-wrap gap-2 sm:mt-10">
               {pintasan.map(({ label, href, ikon: Ikon }) => (
                 <li key={href}>
                   <Link

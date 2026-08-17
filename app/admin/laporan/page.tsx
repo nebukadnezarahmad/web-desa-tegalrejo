@@ -18,10 +18,12 @@ import { SectionHeading } from "@/components/shared/section";
 import { TabAdmin, tabValid } from "@/components/admin/tab-admin";
 import {
   DaftarPengumumanTerbit,
-  DaftarProdukTerbit,
   type BarisPengumuman,
-  type BarisProduk,
 } from "@/components/admin/daftar-terbit";
+import {
+  DaftarProdukTerbit,
+  type BarisProduk,
+} from "@/components/admin/kartu-produk-terbit";
 import { desa } from "@/lib/data/desa";
 
 export const metadata: Metadata = {
@@ -68,7 +70,7 @@ export default async function HalamanAdminLaporan(
   /* Isi yang sudah tayang, untuk dikelola ulang oleh petugas. */
   const { data: dataProdukTerbit } = await supabase
     .from("produk_umkm")
-    .select("id, slug, nama, kategori, harga, satuan, usaha, dusun")
+    .select("id, slug, nama, kategori, harga, satuan, usaha, dusun, foto")
     .eq("status", "terbit")
     .order("nama");
 
@@ -137,7 +139,6 @@ export default async function HalamanAdminLaporan(
       {tab === "produk" && (
       <Section latar="lembut" id="usulan-umkm" className="scroll-mt-20">
         <SectionHeading
-          kicker="Lapak UMKM"
           judul="Usulan produk warga"
           deskripsi="Produk yang diajukan lewat halaman UMKM. Belum tayang sampai diterima di sini."
         />
@@ -155,12 +156,15 @@ export default async function HalamanAdminLaporan(
         )}
 
         <div className="mt-12">
-          <SectionHeading
-            kicker="Sudah Tayang"
-            judul="Produk di lapak"
-            deskripsi="Produk yang sedang tampil untuk warga. Tarik untuk mengembalikannya ke antrean tinjauan."
-            className="mb-6 md:mb-7 md:flex-col md:items-start"
-          />
+          <div className="mx-auto mb-7 max-w-2xl text-center">
+            <h2 className="judul-display text-[1.625rem] text-ink sm:text-[2rem]">
+              Produk di lapak
+            </h2>
+            <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted sm:text-base">
+              Produk yang sedang tampil untuk warga. Tarik untuk
+              mengembalikannya ke antrean tinjauan.
+            </p>
+          </div>
           <DaftarProdukTerbit baris={produkTerbit} />
         </div>
       </Section>
@@ -170,7 +174,6 @@ export default async function HalamanAdminLaporan(
       {tab === "pengumuman" && (
       <Section latar="putih" id="tambah-pengumuman" className="scroll-mt-20">
         <SectionHeading
-          kicker="Kabar Resmi"
           tone="blue"
           judul="Terbitkan pengumuman"
           deskripsi="Isi yang disimpan di sini langsung tampil di halaman pengumuman dan beranda."
@@ -178,13 +181,14 @@ export default async function HalamanAdminLaporan(
         <FormPengumuman hariIni={new Date().toISOString().slice(0, 10)} />
 
         <div className="mt-12">
-          <SectionHeading
-            kicker="Sudah Tayang"
-            tone="blue"
-            judul="Pengumuman terbit"
-            deskripsi="Seluruh pengumuman yang sedang tampil di situs."
-            className="mb-6 md:mb-7 md:flex-col md:items-start"
-          />
+          <div className="mx-auto mb-7 max-w-2xl text-center">
+            <h2 className="judul-display text-[1.625rem] text-ink sm:text-[2rem]">
+              Pengumuman terbit
+            </h2>
+            <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted sm:text-base">
+              Seluruh pengumuman yang sedang tampil di situs.
+            </p>
+          </div>
           <DaftarPengumumanTerbit baris={pengumumanTerbit} />
         </div>
       </Section>

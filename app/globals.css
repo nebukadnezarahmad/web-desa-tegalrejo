@@ -381,24 +381,19 @@ p {
 
 /* ---------- Baris pilihan yang menggulir mendatar di layar sempit ---------- */
 
+/* Deretan penyaring. Dulu ini menggulung ke samping di layar sempit, tapi
+   scrollbar-nya disembunyikan sehingga tidak ada petunjuk apa pun bahwa
+   masih ada isi di balik tepi layar: yang terbaca adalah tombol terpotong,
+   bukan tombol yang bisa digeser. Karena isinya paling banyak sepuluh chip
+   pendek, membungkus jauh lebih jujur daripada menyembunyikan. */
 .baris-gulir {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
   /* Wajib: tanpa ini lebar min-content anak yang tidak menyusut
      ikut membesarkan induk (grid/flex) dan konten meluber dari layar. */
   min-width: 0;
   max-width: 100%;
-  /* Menembus padding induk supaya chip terakhir tidak terpotong tepi layar */
-  margin-inline: -1rem;
-  padding-inline: 1rem;
-  scroll-padding-inline: 1rem;
-}
-
-.baris-gulir::-webkit-scrollbar {
-  display: none;
 }
 
 .baris-gulir > * {
@@ -406,12 +401,6 @@ p {
 }
 
 @media (min-width: 640px) {
-  .baris-gulir {
-    flex-wrap: wrap;
-    overflow-x: visible;
-    margin-inline: 0;
-    padding-inline: 0;
-  }
 }
 
 /* ---------- Kalender sobekan (tepi robek buatan CSS) ---------- */

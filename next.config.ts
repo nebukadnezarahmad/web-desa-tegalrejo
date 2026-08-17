@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  /* Foto produk yang diunggah warga tinggal di Supabase Storage, bukan di
+     public/. next/image menolak host luar yang tidak didaftarkan. */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
+
   // Matikan berkas panduan yang dibuat otomatis Next.js di akar proyek.
   agentRules: false,
 

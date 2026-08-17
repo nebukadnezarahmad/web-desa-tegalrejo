@@ -79,7 +79,7 @@ export function ProdukThumb({
         )}
       >
         <Image
-          src={`/foto/${foto}`}
+          src={foto.startsWith("http") ? foto : `/foto/${foto}`}
           alt={alt ?? ""}
           fill
           sizes={ukuran === "besar" ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}

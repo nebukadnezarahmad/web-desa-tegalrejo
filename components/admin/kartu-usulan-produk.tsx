@@ -55,7 +55,7 @@ export function KartuUsulanProduk({
         <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-[var(--radius-chip)] bg-surface-soft sm:w-44">
           {usulan.foto ? (
             <Image
-              src={`${urlFoto}/${usulan.foto}`}
+              src={usulan.foto.startsWith("http") ? usulan.foto : `${urlFoto}/${usulan.foto}`}
               alt={`Foto ${usulan.nama}`}
               fill
               sizes="176px"
