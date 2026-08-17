@@ -290,6 +290,50 @@ p {
   animation: popover-keluar var(--gerak-cepat) var(--ease-out-quint);
 }
 
+/* Dialog. Di layar sempit panelnya naik dari bawah seperti lembar tarik,
+   di layar lebar meredup masuk di tengah. Keduanya hanya transform dan
+   opacity. */
+@keyframes tirai-masuk {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lembar-naik {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lembar-turun {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(12px); }
+}
+
+[data-slot="dialog-overlay"][data-state="open"] {
+  animation: tirai-masuk var(--gerak-cepat) var(--ease-out-quint);
+}
+
+[data-slot="dialog-content"][data-state="open"] {
+  animation: lembar-naik var(--gerak-cepat) var(--ease-out-quint);
+}
+
+[data-slot="dialog-content"][data-state="closed"] {
+  animation: lembar-turun var(--gerak-cepat) var(--ease-out-quint);
+}
+
+/* Di layar lebar panelnya sudah dipusatkan dengan translate, jadi keyframes
+   di atas akan menimpanya dan membuatnya melompat ke sudut. Pergerakannya
+   dibuat dari titik pusat itu. */
+@media (min-width: 640px) {
+  @keyframes lembar-naik {
+    from { opacity: 0; transform: translate(-50%, calc(-50% + 8px)) scale(0.98); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes lembar-turun {
+    from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    to   { opacity: 0; transform: translate(-50%, calc(-50% + 8px)) scale(0.98); }
+  }
+}
+
 /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
 
 /* Jarak naiknya kecil saja. Reveal yang terlalu jauh terasa seperti

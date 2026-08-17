@@ -9,6 +9,12 @@ import { Section } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
 import { FilterStatusLaporan } from "@/components/admin/filter-status-laporan";
 import { KartuLaporanAdmin } from "@/components/admin/kartu-laporan-admin";
+import { FormPengumuman } from "@/components/admin/form-pengumuman";
+import {
+  KartuUsulanProduk,
+  type UsulanProduk,
+} from "@/components/admin/kartu-usulan-produk";
+import { SectionHeading } from "@/components/shared/section";
 import { desa } from "@/lib/data/desa";
 
 export const metadata: Metadata = {
@@ -18,6 +24,11 @@ export const metadata: Metadata = {
 
 function statusValid(nilai: unknown): nilai is StatusLaporan {
   return typeof nilai === "string" && (daftarStatusLaporan as string[]).includes(nilai);
+}
+
+/** URL publik bucket foto usulan, dirakit sekali di server. */
+function basisUrlFoto() {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/produk-umkm`;
 }
 
 export default async function HalamanAdminLaporan(
@@ -33,6 +44,18 @@ export default async function HalamanAdminLaporan(
     .order("created_at", { ascending: false });
 
   const semuaLaporan = (data ?? []) as Laporan[];
+
+  /* Usulan produk yang belum ditinjau. Dibaca dengan kunci service karena
+     RLS menyembunyikan baris berstatus menunggu dari peran anon. */
+  const { data: dataUsulan } = await supabase
+    .from("produk_umkm")
+    .select(
+      "id, nama, kategori, harga, satuan, deskripsi, pemilik, usaha, rt, dusun, whatsapp, foto, dibuat_pada",
+    )
+    .eq("status", "menunggu")
+    .order("dibuat_pada", { ascending: true });
+
+  const usulan = (dataUsulan ?? []) as UsulanProduk[];
   const jumlah = {
     semua: semuaLaporan.length,
     menunggu: 0,
@@ -77,6 +100,38 @@ export default async function HalamanAdminLaporan(
             ))}
           </div>
         )}
+      </Section>
+
+      {/* Usulan produk dari warga */}
+      <Section latar="lembut" id="usulan-umkm" className="scroll-mt-20">
+        <SectionHeading
+          kicker="Lapak UMKM"
+          judul="Usulan produk warga"
+          deskripsi="Produk yang diajukan lewat halaman UMKM. Belum tayang sampai diterima di sini."
+        />
+
+        {usulan.length === 0 ? (
+          <p className="rounded-[var(--radius-card)] border border-line bg-surface p-6 text-[0.9375rem] text-ink-muted">
+            Belum ada usulan yang menunggu tinjauan.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-5">
+            {usulan.map((u) => (
+              <KartuUsulanProduk key={u.id} usulan={u} urlFoto={basisUrlFoto()} />
+            ))}
+          </div>
+        )}
+      </Section>
+
+      {/* Tambah pengumuman */}
+      <Section latar="putih" id="tambah-pengumuman" className="scroll-mt-20">
+        <SectionHeading
+          kicker="Kabar Resmi"
+          tone="blue"
+          judul="Terbitkan pengumuman"
+          deskripsi="Isi yang disimpan di sini langsung tampil di halaman pengumuman dan beranda."
+        />
+        <FormPengumuman hariIni={new Date().toISOString().slice(0, 10)} />
       </Section>
     </>
   );
