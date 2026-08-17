@@ -25,11 +25,14 @@ export function SiteFooter() {
           <div>
             <Logo />
             <ul className="mt-4 flex flex-col gap-2 text-[0.9375rem] text-ink-muted sm:flex-row sm:flex-wrap sm:gap-x-5 sm:gap-y-1.5">
-              <li className="flex items-center gap-2">
+              {/* Rata atas, bukan tengah. Alamat membungkus tiga baris di
+                  ponsel, dan ikon yang dipusatkan melayang di tengah
+                  paragraf alih-alih menandai awalnya. */}
+              <li className="flex items-start gap-2 sm:items-center">
                 <MapPinIcon
                   size={17}
                   weight="duotone"
-                  className="shrink-0 text-green-strong"
+                  className="mt-0.5 shrink-0 text-green-strong sm:mt-0"
                 />
                 <span>
                   {desa.alamatBalai}, {desa.nama}, {desa.kecamatan},{" "}
@@ -68,7 +71,7 @@ export function SiteFooter() {
               <h2 className="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-ink">
                 Halaman
               </h2>
-              <ul className="flex flex-wrap gap-x-4 gap-y-1.5">
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-0.5 sm:flex sm:flex-wrap sm:gap-y-1.5">
                 {navigasi.map((item) => (
                   <li key={item.href}>
                     <Link
@@ -86,7 +89,7 @@ export function SiteFooter() {
               <h2 className="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-ink">
                 Warga
               </h2>
-              <ul className="flex flex-wrap gap-x-4 gap-y-1.5">
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-0.5 sm:flex sm:flex-wrap sm:gap-y-1.5">
                 {tautanLain.map((item) => (
                   <li key={item.href}>
                     <Link
