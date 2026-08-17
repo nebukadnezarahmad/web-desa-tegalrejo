@@ -30,11 +30,20 @@ export default function HalamanKesehatan() {
 
       {/* Kalkulator, fitur unggulan */}
       <Section latar="putih" id="kalkulator" className="scroll-mt-20">
-        <SectionHeading
-          kicker="Alat Penapisan"
-          judul="Kalkulator status gizi anak"
-          deskripsi="Perhitungan memakai metode LMS dari Standar Antropometri Anak WHO, indeks yang sama yang dipakai kader posyandu. Hasilnya keluar seketika, tanpa data anak dikirim ke mana pun."
-        />
+        {/* Ditulis lepas dari SectionHeading, bukan dengan menimpa kelasnya.
+            Komponen itu menyejajarkan judul ke kiri dan menempelkan aksi di
+            kanan pada layar lebar; memaksanya rata tengah berarti melawan
+            tata letak bawaannya di dua tempat sekaligus. */}
+        <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
+          <h2 className="judul-display text-[1.625rem] text-ink sm:text-[2rem] md:text-[2.375rem]">
+            Kalkulator status gizi anak
+          </h2>
+          <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted sm:mt-4 sm:text-base md:text-[1.0625rem]">
+            Perhitungan memakai metode LMS dari Standar Antropometri Anak WHO,
+            indeks yang sama yang dipakai kader posyandu. Hasilnya keluar
+            seketika, tanpa data anak dikirim ke mana pun.
+          </p>
+        </div>
         <KalkulatorGizi />
       </Section>
 
