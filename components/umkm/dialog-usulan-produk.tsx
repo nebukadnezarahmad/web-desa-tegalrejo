@@ -24,8 +24,29 @@ import { cn } from "@/lib/utils";
 const awal: HasilUsulan = null;
 
 export function DialogUsulanProduk() {
-  const [hasil, kirim, mengirim] = useActionState(usulkanProduk, awal);
+  /* `sesi` dinaikkan tiap dialog ditutup supaya seluruh subpohon formulir
+     dipasang ulang berikut state useActionState-nya. Tanpa itu, warga yang
+     sudah berhasil mengirim satu produk akan selamanya melihat layar sukses
+     lama beserta kode lacaknya, dan tidak bisa mengajukan produk kedua
+     tanpa memuat ulang halaman. */
+  const [sesi, setSesi] = React.useState(0);
   const [terbuka, setTerbuka] = React.useState(false);
+
+  return (
+    <Dialog
+      open={terbuka}
+      onOpenChange={(buka) => {
+        setTerbuka(buka);
+        if (!buka) setSesi((n) => n + 1);
+      }}
+    >
+      <IsiDialogUsulan key={sesi} />
+    </Dialog>
+  );
+}
+
+function IsiDialogUsulan() {
+  const [hasil, kirim, mengirim] = useActionState(usulkanProduk, awal);
   const [namaFoto, setNamaFoto] = React.useState<string | null>(null);
 
   const galat = hasil?.galat ?? {};
@@ -34,7 +55,7 @@ export function DialogUsulanProduk() {
      tindak lanjutnya. Menutup sendiri membuat kiriman terasa hilang. */
 
   return (
-    <Dialog open={terbuka} onOpenChange={setTerbuka}>
+    <>
       <DialogTrigger asChild>
         <button
           type="button"
@@ -188,7 +209,7 @@ export function DialogUsulanProduk() {
           </form>
         )}
       </DialogContent>
-    </Dialog>
+    </>
   );
 }
 

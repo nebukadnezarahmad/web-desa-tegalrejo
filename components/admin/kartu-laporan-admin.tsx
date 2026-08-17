@@ -100,11 +100,31 @@ export function KartuLaporanAdmin({ laporan }: { laporan: Laporan }) {
 }
 
 function DialogTinjau({ laporan }: { laporan: Laporan }) {
-  const [hasil, kirim, menyimpan] = useActionState(ubahStatusLaporan, awal);
+  /* Sama seperti dialog usulan warga: state useActionState hidup di atas
+     DialogContent, jadi tidak ikut lenyap saat Radix melepas isinya. Tanpa
+     pemasangan ulang, petugas yang membuka kembali laporan yang sama akan
+     langsung melihat pesan "Tersimpan" lama sebelum menyentuh apa pun. */
+  const [sesi, setSesi] = React.useState(0);
   const [terbuka, setTerbuka] = React.useState(false);
 
   return (
-    <Dialog open={terbuka} onOpenChange={setTerbuka}>
+    <Dialog
+      open={terbuka}
+      onOpenChange={(buka) => {
+        setTerbuka(buka);
+        if (!buka) setSesi((n) => n + 1);
+      }}
+    >
+      <IsiDialogTinjau key={sesi} laporan={laporan} />
+    </Dialog>
+  );
+}
+
+function IsiDialogTinjau({ laporan }: { laporan: Laporan }) {
+  const [hasil, kirim, menyimpan] = useActionState(ubahStatusLaporan, awal);
+
+  return (
+    <>
       <DialogTrigger asChild>
         <Button type="button" variant="outline" size="sm" className="w-full">
           <PencilSimpleIcon size={16} weight="bold" />
@@ -203,7 +223,7 @@ function DialogTinjau({ laporan }: { laporan: Laporan }) {
           </div>
         </form>
       </DialogContent>
-    </Dialog>
+    </>
   );
 }
 

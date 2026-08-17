@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProdukThumb } from "@/components/umkm/produk-thumb";
 import { FotoDesa } from "@/components/shared/foto-desa";
-import { ambilSemuaProduk, ambilProdukUnggulan } from "@/lib/umkm/queries";
+import { ambilSemuaProduk } from "@/lib/umkm/queries";
 import { formatRupiah } from "@/lib/utils";
 
 // Produk Bu Marni yang sama disebut di headline beranda, sengaja ditautkan
@@ -14,15 +14,26 @@ import { formatRupiah } from "@/lib/utils";
 /* Utamakan produk unggulan yang sudah punya foto. Kartu sorotan ini paling
    besar di beranda, jadi paling terasa kalau isinya cuma ilustrasi ikon. */
 export async function UmkmPreview() {
-  const [produkUmkm, produkUnggulan] = await Promise.all([
-    ambilSemuaProduk(),
-    ambilProdukUnggulan(4),
-  ]);
+  const produkUmkm = await ambilSemuaProduk();
+
+  /* Yang terbaru didahulukan. Produk yang baru diterima petugas paling
+     layak tampil, sedangkan urutan basis data menaruhnya paling belakang. */
+  const terbaru = [...produkUmkm].reverse();
+  const unggulan = terbaru.filter((p) => p.unggulan);
 
   /* Utamakan produk unggulan yang sudah punya foto. Kartu sorotan ini paling
      besar di beranda, jadi paling terasa kalau isinya cuma ilustrasi ikon. */
-  const sorotan = produkUnggulan.find((p) => p.foto) ?? produkUnggulan[0];
-  const lainnya = produkUmkm.filter((p) => p.slug !== sorotan?.slug).slice(0, 3);
+  const sorotan = unggulan.find((p) => p.foto) ?? unggulan[0] ?? terbaru[0];
+
+  /* Produk bertanda unggulan didahulukan, sisanya sekadar pengisi. Kolom ini
+     dulu mengambil produk pertama apa adanya, sehingga menandai unggulan di
+     panel petugas tidak berpengaruh apa pun terhadap beranda. Empat kartu,
+     bukan tiga: kisinya memang menyediakan dua kolom kali dua baris di
+     samping kartu sorotan, dan slot keempat sebelumnya dibiarkan kosong. */
+  const lainnya = [
+    ...unggulan.filter((p) => p.slug !== sorotan?.slug),
+    ...terbaru.filter((p) => p.slug !== sorotan?.slug && !p.unggulan),
+  ].slice(0, 4);
 
   /* Lapak kosong bukan galat: bisa jadi semua usulan masih menunggu tinjauan.
      Seksi ini dilewati saja daripada merobohkan beranda. */
