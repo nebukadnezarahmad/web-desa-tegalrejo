@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { klienAnon } from "@/lib/supabase/anon";
+import { lewatiBatas } from "@/lib/batas-laju";
 import { buatKodeLacak, normalisasiKodeLacak } from "@/lib/lapor/kode-lacak";
 import { daftarKategoriLaporan } from "@/lib/lapor/types";
 import type { StatusLaporanPublik } from "@/lib/lapor/types";
@@ -22,6 +23,19 @@ export async function kirimLaporan(
   _sebelumnya: HasilKirimLaporan | null,
   formData: FormData,
 ): Promise<HasilKirimLaporan> {
+  const batas = await lewatiBatas({
+    kunci: "lapor-warga",
+    maksimal: 5,
+    jendelaDetik: 600,
+  });
+
+  if (!batas.boleh) {
+    return {
+      berhasil: false,
+      pesan: `Terlalu banyak laporan dalam waktu singkat. Coba lagi dalam ${Math.ceil(batas.sisaDetik / 60)} menit.`,
+    };
+  }
+
   const parsed = SkemaLaporan.safeParse({
     kategori: formData.get("kategori"),
     lokasi: formData.get("lokasi"),

@@ -2,6 +2,7 @@
 
 import { timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { lewatiBatas } from "@/lib/batas-laju";
 import { redirect } from "next/navigation";
 import { buatTokenSesi, NAMA_COOKIE, UMUR_SESI_DETIK } from "@/lib/admin/sesi";
 
@@ -19,6 +20,20 @@ export async function loginAdmin(
   _sebelumnya: HasilLogin,
   formData: FormData,
 ): Promise<HasilLogin> {
+  /* Sandi bersama tanpa nama pengguna: tanpa batas percobaan, penebakan
+     otomatis tidak menghadapi hambatan apa pun. */
+  const batas = await lewatiBatas({
+    kunci: "login-admin",
+    maksimal: 8,
+    jendelaDetik: 900,
+  });
+
+  if (!batas.boleh) {
+    return {
+      pesan: `Terlalu banyak percobaan masuk. Coba lagi dalam ${Math.ceil(batas.sisaDetik / 60)} menit.`,
+    };
+  }
+
   const sandi = String(formData.get("sandi") ?? "");
   const tujuan = String(formData.get("tujuan") || "/admin/laporan");
   const sandiBenar = process.env.ADMIN_PASSWORD;

@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans, Bricolage_Grotesque } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
-import { desa } from "@/lib/data/desa";
+import { desa, situs } from "@/lib/data/desa";
 import "./globals.css";
 
 // Plus Jakarta Sans, tipografi identitas kota Jakarta oleh Tokotype.
@@ -28,6 +28,14 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
+  /* Tanpa ini, og:image dan tautan kanonik terangkai relatif dan tidak
+     terbaca oleh pratayang WhatsApp maupun mesin pencari. */
+  metadataBase: new URL(situs),
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    siteName: `${desa.merek} - ${desa.nama}`,
+  },
   title: {
     default: `${desa.merek} - ${desa.nama}`,
     template: `%s · ${desa.merek}`,

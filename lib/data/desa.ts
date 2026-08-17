@@ -19,6 +19,10 @@
  *   dan jumlah posyandu juga masih karangan. Angka totalnya saja yang
  *   dicocokkan dengan data asli.
  */
+/** Alamat situs yang sudah ter-deploy. Dipakai robots, sitemap, dan
+ *  metadataBase agar tautan berbagi terangkai penuh, bukan relatif. */
+export const situs = "https://web-desa-tegalrejo.vercel.app";
+
 export const desa = {
   merek: "Balai",
   tagline: "Satu pintu untuk warga desa.",

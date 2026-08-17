@@ -2,7 +2,7 @@
 
 ## Instansi
 
-[ISI: Nama Sekolah / Universitas Asal]
+Institut Teknologi PLN (ITPLN)
 
 ## Anggota Tim
 

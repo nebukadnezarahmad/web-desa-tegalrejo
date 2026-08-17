@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { klienService } from "@/lib/supabase/service";
 import { kategoriUmkm } from "@/lib/data/umkm";
 import { buatKodeLacak, normalisasiKodeLacak } from "@/lib/lapor/kode-lacak";
+import { lewatiBatas } from "@/lib/batas-laju";
 
 export type HasilUsulan = {
   berhasil: boolean;
@@ -61,6 +62,19 @@ export async function usulkanProduk(
   _sebelumnya: HasilUsulan,
   formData: FormData,
 ): Promise<HasilUsulan> {
+  const batas = await lewatiBatas({
+    kunci: "usulan-produk",
+    maksimal: 3,
+    jendelaDetik: 600,
+  });
+
+  if (!batas.boleh) {
+    return {
+      berhasil: false,
+      pesan: `Terlalu banyak pengajuan dalam waktu singkat. Coba lagi dalam ${Math.ceil(batas.sisaDetik / 60)} menit.`,
+    };
+  }
+
   const parsed = SkemaUsulan.safeParse({
     nama: formData.get("nama"),
     kategori: formData.get("kategori"),
@@ -86,6 +100,23 @@ export async function usulkanProduk(
 
   const d = parsed.data;
   const supabase = klienService();
+
+  /* Batas IP saja tidak cukup: satu orang bisa berpindah jaringan. Nomor
+     WhatsApp adalah penanda yang paling stabil pada formulir ini. */
+  const sehariLalu = new Date(Date.now() - 86_400_000).toISOString();
+  const { count } = await supabase
+    .from("produk_umkm")
+    .select("*", { count: "exact", head: true })
+    .eq("whatsapp", d.whatsapp)
+    .gte("dibuat_pada", sehariLalu);
+
+  if ((count ?? 0) >= 5) {
+    return {
+      berhasil: false,
+      pesan:
+        "Nomor ini sudah mengajukan lima produk dalam sehari. Hubungi balai desa bila perlu menambah lagi.",
+    };
+  }
 
   /* Foto diperiksa di sini, bukan hanya mengandalkan batas bucket.
      Penolakan dari Storage datang belakangan dan pesannya tidak ramah. */
