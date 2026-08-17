@@ -88,7 +88,7 @@ export function GrafikTumbuh() {
               <CartesianGrid stroke="var(--line)" vertical={false} />
               <XAxis
                 dataKey="umur"
-                tick={{ fill: "var(--ink-muted)", fontSize: sempit ? 10 : 12 }}
+                tick={{ fill: "var(--ink-muted)", fontSize: 12 }}
                 stroke="var(--line-strong)"
                 tickLine={false}
                 ticks={sempit ? [0, 12, 24, 36, 48, 60] : undefined}
@@ -106,7 +106,7 @@ export function GrafikTumbuh() {
               />
               <YAxis
                 domain={[40, 125]}
-                tick={{ fill: "var(--ink-muted)", fontSize: sempit ? 10 : 12 }}
+                tick={{ fill: "var(--ink-muted)", fontSize: 12 }}
                 stroke="var(--line-strong)"
                 tickLine={false}
                 width={sempit ? 40 : 56}
@@ -178,7 +178,7 @@ export function GrafikTumbuh() {
                 {k.label}
               </li>
             ))}
-            <li className="w-full text-[0.6875rem] text-ink-faint">
+            <li className="w-full text-[0.75rem] text-ink-faint">
               Sumbu mendatar: usia dalam bulan · Sumbu tegak: tinggi dalam cm
             </li>
           </ul>

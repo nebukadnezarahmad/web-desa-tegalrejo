@@ -382,7 +382,7 @@ function KartuIndeks({ hasil }: { hasil: HasilIndeks }) {
             }}
           />
         </div>
-        <div className="mt-2 flex justify-between text-[0.6875rem] font-medium text-ink-faint">
+        <div className="mt-2 flex justify-between text-[0.75rem] font-medium text-ink-faint">
           <span>−4 SD</span>
           <span>median</span>
           <span>+4 SD</span>

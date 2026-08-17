@@ -47,13 +47,13 @@ export function AgendaWarga() {
                   )}
                 />
                 <div className="tepi-sobek relative bg-surface px-3 pb-4 pt-3 text-center shadow-md shadow-ink/10 ring-1 ring-line">
-                  <p className="text-[0.625rem] font-bold uppercase tracking-[0.12em] text-ink-faint">
+                  <p className="text-[0.75rem] font-bold uppercase tracking-[0.12em] text-ink-faint">
                     {namaHari(a.tanggal).slice(0, 3)}
                   </p>
                   <p className="mt-0.5 text-[1.75rem] font-extrabold leading-none tracking-tight text-green-strong sm:text-[2rem]">
                     {formatTanggalPendek(a.tanggal).split(" ")[0]}
                   </p>
-                  <p className="mt-0.5 text-[0.6875rem] font-semibold text-ink-muted">
+                  <p className="mt-0.5 text-[0.75rem] font-semibold text-ink-muted">
                     {formatTanggalPendek(a.tanggal).split(" ")[1]}
                   </p>
                 </div>

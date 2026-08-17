@@ -65,7 +65,7 @@ export function BottomNav() {
                 </span>
                 <span
                   className={cn(
-                    "w-full truncate text-center text-[0.6875rem] leading-none",
+                    "w-full truncate text-center text-[0.75rem] leading-none",
                     ini ? "font-bold" : "font-medium",
                   )}
                 >

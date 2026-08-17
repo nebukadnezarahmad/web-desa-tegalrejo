@@ -100,7 +100,7 @@ export function Hero() {
 
             <figcaption className="relative flex items-baseline justify-between gap-3 px-6 pt-6 sm:px-8 sm:pt-7">
               <span className="kicker text-green-deep">Denyut Desa</span>
-              <span className="font-mono text-[0.6875rem] tracking-tight text-green-strong">
+              <span className="font-mono text-[0.75rem] tracking-tight text-green-strong">
                 {desa.ketinggian}
               </span>
             </figcaption>

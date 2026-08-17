@@ -52,7 +52,7 @@ export function LayananAkordeon() {
                     <li key={a} className="flex gap-3">
                       <span
                         aria-hidden
-                        className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-soft text-[0.6875rem] font-bold text-blue-deep"
+                        className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-soft text-[0.75rem] font-bold text-blue-deep"
                       >
                         {j + 1}
                       </span>

@@ -204,13 +204,13 @@ export default function HalamanProfil() {
               <dl className="flex shrink-0 gap-5 text-right">
                 <div>
                   <dd className="text-base font-extrabold text-ink">{r.kk}</dd>
-                  <dt className="text-[0.6875rem] text-ink-faint">KK</dt>
+                  <dt className="text-[0.75rem] text-ink-faint">KK</dt>
                 </div>
                 <div>
                   <dd className="text-base font-extrabold text-green-strong">
                     {formatAngka(r.warga)}
                   </dd>
-                  <dt className="text-[0.6875rem] text-ink-faint">warga</dt>
+                  <dt className="text-[0.75rem] text-ink-faint">warga</dt>
                 </div>
               </dl>
             </li>
@@ -222,13 +222,13 @@ export default function HalamanProfil() {
                 <dd className="text-base font-extrabold text-ink">
                   {formatAngka(totalKk)}
                 </dd>
-                <dt className="text-[0.6875rem] text-ink-faint">KK</dt>
+                <dt className="text-[0.75rem] text-ink-faint">KK</dt>
               </div>
               <div>
                 <dd className="text-base font-extrabold text-green-strong">
                   {formatAngka(totalWarga)}
                 </dd>
-                <dt className="text-[0.6875rem] text-ink-faint">warga</dt>
+                <dt className="text-[0.75rem] text-ink-faint">warga</dt>
               </div>
             </dl>
           </li>

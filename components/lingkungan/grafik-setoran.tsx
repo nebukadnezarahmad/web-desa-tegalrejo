@@ -31,12 +31,12 @@ export function GrafikSetoran() {
             <CartesianGrid stroke="var(--line)" vertical={false} />
             <XAxis
               dataKey="bulan"
-              tick={{ fill: "var(--ink-muted)", fontSize: sempit ? 10 : 12 }}
+              tick={{ fill: "var(--ink-muted)", fontSize: 12 }}
               stroke="var(--line-strong)"
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "var(--ink-muted)", fontSize: sempit ? 10 : 12 }}
+              tick={{ fill: "var(--ink-muted)", fontSize: 12 }}
               stroke="var(--line-strong)"
               tickLine={false}
               width={sempit ? 34 : 56}
@@ -56,7 +56,7 @@ export function GrafikSetoran() {
               verticalAlign="top"
               height={sempit ? 34 : 40}
               iconSize={sempit ? 9 : 14}
-              wrapperStyle={{ fontSize: sempit ? "0.6875rem" : "0.8125rem" }}
+              wrapperStyle={{ fontSize: "0.8125rem" }}
               formatter={(v: string) => (sempit ? v.split(" ")[0] : v)}
             />
             <Bar

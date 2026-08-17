@@ -44,7 +44,7 @@ export function Logo({ className }: { className?: string }) {
           <span className="text-[1.0625rem] font-extrabold tracking-tight text-ink">
             {desa.merek}
           </span>
-          <span className="mt-0.5 text-[0.6875rem] font-medium tracking-wide text-ink-faint">
+          <span className="mt-0.5 text-[0.75rem] font-medium tracking-wide text-ink-faint">
             {desa.nama}
           </span>
         </span>
