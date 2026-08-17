@@ -1,3 +1,4 @@
+import * as React from "react";
 import Link from "next/link";
 import {
   ArrowRightIcon,
@@ -101,9 +102,6 @@ export function Hero() {
               sebagai datum supaya pita ini terbaca sebagai tanah, bukan
               sekadar grafik hias. */}
           <figure className="relative overflow-hidden rounded-[var(--radius-panel)] border border-line bg-surface">
-            <div aria-hidden className="pita-elevasi absolute inset-0" />
-            <div aria-hidden className="garis-elevasi absolute inset-0" />
-
             <figcaption className="relative flex items-baseline justify-between gap-3 px-6 pt-6 sm:px-8 sm:pt-7">
               <span className="kicker text-green-deep">Denyut Desa</span>
               <span className="font-mono text-[0.75rem] tracking-tight text-green-strong">
@@ -111,17 +109,35 @@ export function Hero() {
               </span>
             </figcaption>
 
-            <dl className="relative mt-6 flex flex-col-reverse">
+            {/* Pita lereng dipasang pada barisnya sendiri, bukan sebagai
+                lapisan gradien di atas seluruh kartu. Gradien memakai
+                persentase tinggi kartu, sedangkan tinggi baris mengikuti
+                isinya, jadi batas pitanya memotong baris di tempat acak dan
+                itulah yang terbaca berantakan.
+
+                Tangga indentasi hanya dipasang mulai layar sedang. Di lebar
+                ponsel, pergeseran setengah rem per baris terlalu kecil untuk
+                terbaca sebagai lereng dan justru tampak seperti label yang
+                gagal disejajarkan. */}
+            <dl className="relative mt-5 flex flex-col-reverse">
               {statistikDesa.map((s, i) => (
                 <div
                   key={s.label}
-                  className="flex items-baseline justify-between gap-4 px-6 py-3.5 sm:px-8"
-                  style={{ paddingInlineStart: `calc(1.5rem + ${i * 0.5}rem)` }}
+                  className="flex items-baseline justify-between gap-3 border-t border-green/15 px-6 py-2.5 first:border-t-0 sm:gap-4 sm:py-3.5 sm:pe-8 sm:ps-[calc(2rem+var(--tangga))]"
+                  style={
+                    {
+                      "--tangga": `${i * 0.5}rem`,
+                      /* Kaki lereng paling pekat, puncaknya hampir putih.
+                         Urutan dibalik flex-col-reverse, jadi indeks 0
+                         berada di dasar kartu. */
+                      backgroundColor: `color-mix(in srgb, var(--green) ${[13, 9, 6, 3.5][i] ?? 2}%, transparent)`,
+                    } as React.CSSProperties
+                  }
                 >
                   <dt className="text-[0.8125rem] font-medium text-ink-muted">
                     {s.label}
                   </dt>
-                  <dd className="shrink-0 font-display text-[1.5rem] font-extrabold leading-none tracking-tight text-ink tabular-nums sm:text-[1.75rem]">
+                  <dd className="shrink-0 font-display text-[1.375rem] font-extrabold leading-none tracking-tight text-ink tabular-nums sm:text-[1.75rem]">
                     {formatAngka(s.nilai)}
                     <span className="ml-1.5 font-sans text-xs font-semibold text-ink-faint">
                       {s.satuan}
@@ -131,7 +147,9 @@ export function Hero() {
               ))}
             </dl>
 
-            <p className="relative mt-5 border-t border-green/15 px-6 py-5 text-[0.8125rem] leading-relaxed text-ink-muted sm:px-8">
+            {/* Tanpa jarak atas: celah putih di antara pita terakhir dan
+                keterangan akan memutus gradien lerengnya. */}
+            <p className="relative border-t border-green/15 px-6 py-4 text-[0.8125rem] leading-relaxed text-ink-muted sm:py-5 sm:px-8">
               {desa.luasWilayah}, {desa.jumlahDusun} dusun, {desa.jumlahRt} RT.
               Hanya 20 hektar berupa sawah, sisanya tegalan dan kebun yang
               mengikuti kontur lereng.
