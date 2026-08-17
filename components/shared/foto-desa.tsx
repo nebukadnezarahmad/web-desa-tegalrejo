@@ -59,7 +59,11 @@ export function FotoDesa({
   const gambar = (
     <div className={cn("relative overflow-hidden", rasioKelas[rasio], className)}>
       <Image
-        src={`/foto/${src}`}
+        /* Foto bawaan tinggal di public/foto, sedangkan foto unggahan warga
+           tinggal di bucket Storage dan sudah berupa URL penuh. Tanpa
+           pembeda ini, unggahan warga dirangkai jadi /foto/https://... dan
+           pasti gagal dimuat. Perlakuan yang sama sudah ada di ProdukThumb. */
+        src={src.startsWith("http") ? src : `/foto/${src}`}
         alt={alt}
         fill
         priority={prioritas}
