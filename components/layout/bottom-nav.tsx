@@ -37,7 +37,12 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface/95 backdrop-blur-md lg:hidden"
+      /* Latar pekat, bukan tembus 95 persen. Isi halaman menggulung tepat di
+         bawah bilah ini, dan sisa lima persen sudah cukup membuat teks di
+         belakangnya terbaca sebagai bayangan, paling terasa pada angka tebal
+         kartu Denyut Desa. Blur latar tidak menutupinya karena yang tersisa
+         adalah tembusan warna, bukan ketajaman. */
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
