@@ -12,11 +12,13 @@ import {
   type HasilAksi,
 } from "@/app/admin/laporan/actions-tambahan";
 import { formatRupiah, formatTanggal } from "@/lib/utils";
+import { FormSunting } from "@/components/admin/kartu-produk-terbit";
 
 export type UsulanProduk = {
   id: string;
+  slug: string;
   nama: string;
-  kategori: string;
+  kategori: "Makanan" | "Kerajinan" | "Pertanian" | "Jasa";
   harga: number;
   satuan: string;
   deskripsi: string;
@@ -25,6 +27,7 @@ export type UsulanProduk = {
   rt: string;
   dusun: string;
   whatsapp: string;
+  unggulan: boolean;
   foto: string | null;
   dibuat_pada: string;
 };
@@ -91,6 +94,13 @@ export function KartuUsulanProduk({
             {usulan.whatsapp}
           </p>
         </div>
+      </div>
+
+      {/* Sunting lebih dulu, baru putuskan. Tanpa ini, salah ketik harga
+          dari warga hanya bisa dijawab dengan menolak lalu meminta kirim
+          ulang, padahal memperbaikinya jauh lebih murah. */}
+      <div className="border-t border-line px-5 pb-1 sm:px-6">
+        <FormSunting produk={{ ...usulan, dusun: usulan.dusun, slug: usulan.slug }} />
       </div>
 
       <form action={kirim} className="border-t border-line bg-surface-soft p-5 sm:p-6">

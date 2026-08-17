@@ -198,7 +198,7 @@ function KartuProdukTerbit({ produk }: { produk: BarisProduk }) {
   );
 }
 
-function FormSunting({ produk }: { produk: BarisProduk }) {
+export function FormSunting({ produk }: { produk: BarisProduk }) {
   const [hasil, kirim, menyimpan] = useActionState(suntingProduk, awal);
 
   return (
