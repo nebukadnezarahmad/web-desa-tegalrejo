@@ -33,7 +33,10 @@ if (!url) {
 }
 
 const ref = new URL(url).hostname.split(".")[0];
-const sql = readFileSync(new URL("../supabase/skema.sql", import.meta.url), "utf8");
+/* Nama berkas boleh diberikan sebagai argumen supaya migrasi lanjutan
+   memakai skrip yang sama. */
+const berkas = process.argv[2] ?? "skema.sql";
+const sql = readFileSync(new URL(`../supabase/${berkas}`, import.meta.url), "utf8");
 
 const res = await fetch(
   `https://api.supabase.com/v1/projects/${ref}/database/query`,
@@ -54,5 +57,5 @@ if (!res.ok) {
   process.exit(1);
 }
 
-console.log(`Skema dijalankan pada proyek ${ref}.`);
+console.log(`${berkas} dijalankan pada proyek ${ref}.`);
 console.log(teks.slice(0, 300));

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { klienService } from "@/lib/supabase/service";
 import { NAMA_COOKIE, tokenSesiValid } from "@/lib/admin/sesi";
 import { kategoriPengumuman } from "@/lib/data/pengumuman";
+import { catatRiwayat } from "@/lib/admin/riwayat";
 
 export type HasilAksi = { berhasil: boolean; pesan: string } | null;
 
@@ -100,6 +101,11 @@ export async function tambahPengumuman(
     return { berhasil: false, pesan: `Gagal menyimpan: ${error.message}` };
   }
 
+  await catatRiwayat({
+    entitas: "pengumuman", entitasId: slug, judul: d.judul,
+    tindakan: "diterbitkan",
+  });
+
   revalidatePath("/pengumuman");
   revalidatePath("/");
   revalidatePath("/admin/laporan");
@@ -146,6 +152,15 @@ export async function tinjauUsulanProduk(
     return { berhasil: false, pesan: `Gagal menyimpan: ${error.message}` };
   }
 
+  const { data: p } = await klienService()
+    .from("produk_umkm").select("nama").eq("id", id).maybeSingle();
+
+  await catatRiwayat({
+    entitas: "produk", entitasId: id, judul: p?.nama ?? "Produk",
+    tindakan: keputusan === "terbit" ? "usulan diterima" : "usulan ditolak",
+    keterangan: catatanAdmin ?? null,
+  });
+
   revalidatePath("/umkm");
   revalidatePath("/");
   revalidatePath("/admin/laporan");
@@ -173,12 +188,21 @@ export async function hapusPengumuman(
   const parsed = SkemaHapusPengumuman.safeParse({ slug: formData.get("slug") });
   if (!parsed.success) return { berhasil: false, pesan: "Data tidak valid." };
 
-  const { error } = await klienService()
+  const supabase = klienService();
+  const { data: lama } = await supabase
+    .from("pengumuman").select("judul").eq("slug", parsed.data.slug).maybeSingle();
+
+  const { error } = await supabase
     .from("pengumuman")
     .delete()
     .eq("slug", parsed.data.slug);
 
   if (error) return { berhasil: false, pesan: `Gagal menghapus: ${error.message}` };
+
+  await catatRiwayat({
+    entitas: "pengumuman", entitasId: parsed.data.slug,
+    judul: lama?.judul ?? parsed.data.slug, tindakan: "dihapus",
+  });
 
   revalidatePath("/pengumuman");
   revalidatePath("/");
@@ -210,6 +234,12 @@ export async function kelolaProdukTerbit(
   const supabase = klienService();
   const { id, tindakan } = parsed.data;
 
+  /* Nama dibaca sebelum tindakan dijalankan: kalau produknya dihapus,
+     setelah itu tidak ada lagi yang bisa dibaca untuk riwayat. */
+  const { data: lamaP } = await supabase
+    .from("produk_umkm").select("nama").eq("id", id).maybeSingle();
+  const nama = lamaP?.nama ?? "Produk";
+
   const { error } =
     tindakan === "hapus"
       ? await supabase.from("produk_umkm").delete().eq("id", id)
@@ -219,6 +249,11 @@ export async function kelolaProdukTerbit(
           .eq("id", id);
 
   if (error) return { berhasil: false, pesan: `Gagal: ${error.message}` };
+
+  await catatRiwayat({
+    entitas: "produk", entitasId: id, judul: nama,
+    tindakan: tindakan === "hapus" ? "dihapus" : "ditarik dari lapak",
+  });
 
   revalidatePath("/umkm");
   revalidatePath("/");
@@ -292,8 +327,11 @@ export async function suntingProduk(
 
   if (error) return { berhasil: false, pesan: `Gagal menyimpan: ${error.message}` };
 
+  await catatRiwayat({
+    entitas: "produk", entitasId: id, judul: isi.nama, tindakan: "disunting",
+  });
+
   revalidatePath("/umkm");
-  revalidatePath(`/umkm`);
   revalidatePath("/");
   revalidatePath("/admin/laporan");
   return { berhasil: true, pesan: "Perubahan tersimpan." };

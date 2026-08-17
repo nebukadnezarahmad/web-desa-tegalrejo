@@ -17,6 +17,10 @@ import {
 import { SectionHeading } from "@/components/shared/section";
 import { TabAdmin, tabValid } from "@/components/admin/tab-admin";
 import {
+  DaftarRiwayat,
+  type BarisRiwayat,
+} from "@/components/admin/daftar-riwayat";
+import {
   DaftarPengumumanTerbit,
   type BarisPengumuman,
 } from "@/components/admin/daftar-terbit";
@@ -81,6 +85,14 @@ export default async function HalamanAdminLaporan(
 
   const produkTerbit = (dataProdukTerbit ?? []) as BarisProduk[];
   const pengumumanTerbit = (dataPengumuman ?? []) as BarisPengumuman[];
+
+  const { data: dataRiwayat } = await supabase
+    .from("riwayat_admin")
+    .select("id, entitas, judul, tindakan, keterangan, dibuat_pada")
+    .order("dibuat_pada", { ascending: false })
+    .limit(100);
+
+  const riwayat = (dataRiwayat ?? []) as BarisRiwayat[];
   const jumlah = {
     semua: semuaLaporan.length,
     menunggu: 0,
@@ -191,6 +203,21 @@ export default async function HalamanAdminLaporan(
           </div>
           <DaftarPengumumanTerbit baris={pengumumanTerbit} />
         </div>
+      </Section>
+      )}
+
+      {/* Riwayat tindakan */}
+      {tab === "riwayat" && (
+      <Section latar="lembut">
+        <div className="mx-auto mb-7 max-w-2xl text-center">
+          <h2 className="judul-display text-[1.625rem] text-ink sm:text-[2rem]">
+            Riwayat tindakan
+          </h2>
+          <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted sm:text-base">
+            Seratus tindakan terakhir di panel ini, terbaru di atas.
+          </p>
+        </div>
+        <DaftarRiwayat baris={riwayat} />
       </Section>
       )}
     </>

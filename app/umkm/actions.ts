@@ -4,12 +4,23 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { klienService } from "@/lib/supabase/service";
 import { kategoriUmkm } from "@/lib/data/umkm";
+import { buatKodeLacak, normalisasiKodeLacak } from "@/lib/lapor/kode-lacak";
 
 export type HasilUsulan = {
   berhasil: boolean;
   pesan: string;
+  kodeLacak?: string;
   galat?: Record<string, string>;
 } | null;
+
+export type StatusUsulan = {
+  nama: string;
+  kategori: string;
+  status: "menunggu" | "terbit" | "ditolak";
+  catatan_admin: string | null;
+  dibuat_pada: string;
+  diperbarui_pada: string;
+};
 
 const BATAS_FOTO = 3 * 1024 * 1024; // 3 MB, sama dengan batas bucket
 const TIPE_FOTO = ["image/jpeg", "image/png", "image/webp"];
@@ -132,8 +143,11 @@ export async function usulkanProduk(
     .map((p) => p.trim())
     .filter(Boolean);
 
+  const kodeLacak = buatKodeLacak();
+
   const { error } = await supabase.from("produk_umkm").insert({
     slug,
+    kode_lacak: kodeLacak,
     nama: d.nama,
     kategori: d.kategori,
     harga: d.harga,
@@ -158,7 +172,37 @@ export async function usulkanProduk(
 
   return {
     berhasil: true,
+    kodeLacak,
     pesan:
-      "Usulan terkirim. Petugas desa akan meninjau dan menghubungi lewat WhatsApp bila ada yang perlu dipastikan.",
+      "Petugas desa akan meninjau usulan ini. Simpan kode di bawah untuk memantau hasilnya.",
   };
+}
+
+/**
+ * Pengecekan status usulan oleh warga.
+ *
+ * Memanggil fungsi SECURITY DEFINER di Supabase, bukan SELECT langsung:
+ * kebijakan RLS hanya membuka baris berstatus terbit untuk peran anon,
+ * padahal yang justru perlu dicek adalah usulan yang masih menunggu.
+ * Fungsi itu hanya mengembalikan kolom aman, tanpa nomor WhatsApp maupun
+ * nama pemilik.
+ */
+export async function cekStatusUsulan(
+  _sebelumnya: { hasil?: StatusUsulan; pesan?: string } | null,
+  formData: FormData,
+): Promise<{ hasil?: StatusUsulan; pesan?: string } | null> {
+  const kode = normalisasiKodeLacak(String(formData.get("kode") ?? ""));
+
+  if (kode.length !== 9) {
+    return { pesan: "Kode lacak terdiri dari 8 karakter, contoh 7ULP-AMZ6." };
+  }
+
+  const { data, error } = await klienService().rpc("cek_status_usulan", { kode });
+
+  if (error) return { pesan: `Gagal memeriksa: ${error.message}` };
+
+  const baris = (data as StatusUsulan[] | null)?.[0];
+  if (!baris) return { pesan: "Kode itu tidak ditemukan. Periksa kembali." };
+
+  return { hasil: baris };
 }

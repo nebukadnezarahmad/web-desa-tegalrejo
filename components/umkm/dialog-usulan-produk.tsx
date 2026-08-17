@@ -69,6 +69,21 @@ export function DialogUsulanProduk() {
                 {hasil.pesan}
               </p>
             </div>
+
+            {hasil.kodeLacak && (
+              <div className="w-full rounded-[var(--radius-card)] border border-green/30 bg-surface px-5 py-4">
+                <p className="text-[0.75rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                  Kode lacak
+                </p>
+                <p className="mt-1 font-mono text-xl font-bold tracking-wider text-green-deep">
+                  {hasil.kodeLacak}
+                </p>
+                <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-ink-muted">
+                  Kode tidak dikirim ulang lewat cara lain, jadi dicatat
+                  sendiri saja.
+                </p>
+              </div>
+            )}
             <DialogClose asChild>
               <Button type="button" variant="soft">
                 Tutup

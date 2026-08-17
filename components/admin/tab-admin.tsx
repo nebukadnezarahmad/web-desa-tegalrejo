@@ -3,10 +3,11 @@ import {
   ClipboardTextIcon,
   StorefrontIcon,
   MegaphoneIcon,
+  ClockCounterClockwiseIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 
-export const daftarTabAdmin = ["laporan", "produk", "pengumuman"] as const;
+export const daftarTabAdmin = ["laporan", "produk", "pengumuman", "riwayat"] as const;
 export type TabAdmin = (typeof daftarTabAdmin)[number];
 
 export function tabValid(nilai: unknown): nilai is TabAdmin {
@@ -22,6 +23,7 @@ const isi: Record<
   laporan: { label: "Laporan warga", ikon: ClipboardTextIcon, hitungan: true },
   produk: { label: "Usulan produk", ikon: StorefrontIcon, hitungan: true },
   pengumuman: { label: "Pengumuman", ikon: MegaphoneIcon },
+  riwayat: { label: "Riwayat", ikon: ClockCounterClockwiseIcon },
 };
 
 /**
@@ -45,6 +47,7 @@ export function TabAdmin({
     laporan: jumlahLaporan,
     produk: jumlahUsulan,
     pengumuman: undefined,
+    riwayat: undefined,
   };
 
   return (

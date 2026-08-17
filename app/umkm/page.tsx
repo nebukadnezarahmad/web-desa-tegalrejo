@@ -4,6 +4,7 @@ import { Section } from "@/components/shared/section";
 import { LapakUmkm } from "@/components/umkm/lapak-umkm";
 import { ambilSemuaProduk } from "@/lib/umkm/queries";
 import { DialogUsulanProduk } from "@/components/umkm/dialog-usulan-produk";
+import { CekStatusUsulan } from "@/components/umkm/cek-status-usulan";
 
 export const metadata: Metadata = {
   title: "Lapak UMKM Warga",
@@ -31,6 +32,7 @@ export default async function HalamanUmkm() {
             seperti apa produk tetangganya tampil, baru diajak ikut. */}
         <div className="mt-10 sm:mt-12">
           <DialogUsulanProduk />
+          <CekStatusUsulan />
         </div>
       </Section>
     </>
