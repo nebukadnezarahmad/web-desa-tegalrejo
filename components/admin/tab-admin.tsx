@@ -53,23 +53,28 @@ export function TabAdmin({
   return (
     <nav aria-label="Bagian panel petugas" className="border-b border-line bg-surface">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Bisa digeser di layar sempit supaya tiga tab tidak berdesakan. */}
-        <ul className="-mb-px flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Empat tab tidak muat sebaris di ponsel: yang terakhir tersembunyi
+            di balik tepi layar tanpa petunjuk apa pun bahwa masih ada
+            lanjutannya. Di lebar sempit disusun dua kolom, dan penanda tab
+            aktif berpindah dari garis bawah ke latar karena garis bawah
+            tidak terbaca pada susunan bertingkat. */}
+        <ul className="grid grid-cols-2 gap-1 py-2 sm:-mb-px sm:flex sm:py-0">
           {daftarTabAdmin.map((tab) => {
             const { label, ikon: Ikon } = isi[tab];
             const dipilih = tab === aktif;
             const n = angka[tab];
 
             return (
-              <li key={tab} className="shrink-0">
+              <li key={tab} className="min-w-0 sm:shrink-0">
                 <Link
                   href={`/admin/laporan?tab=${tab}`}
                   aria-current={dipilih ? "page" : undefined}
                   className={cn(
-                    "flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3.5 text-[0.9375rem] font-semibold transition-[color,border-color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)] sm:px-5",
+                    "flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-chip)] px-3 py-3 text-[0.875rem] font-semibold transition-[color,border-color,background-color] duration-[var(--gerak-cepat)] ease-[var(--ease-out-quint)]",
+                    "sm:justify-start sm:rounded-none sm:border-b-2 sm:px-5 sm:py-3.5 sm:text-[0.9375rem]",
                     dipilih
-                      ? "border-blue-strong text-blue-strong"
-                      : "border-transparent text-ink-muted hover:border-line-strong hover:text-ink",
+                      ? "bg-blue-soft text-blue-strong sm:border-blue-strong sm:bg-transparent"
+                      : "text-ink-muted hover:bg-surface-soft sm:border-transparent sm:bg-transparent sm:hover:border-line-strong sm:hover:text-ink",
                   )}
                 >
                   <Ikon size={18} weight={dipilih ? "fill" : "duotone"} />
